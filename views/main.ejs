@@ -1,6 +1,32 @@
-<% if( nickname== undefined){ %>
-	<% console.log(nickname); %>
+<div id="panelup">
+	<ul>
+		<li><a href="/main/auta" >AUTA</a></li>
+		<li><a href="/main/samoloty" >SAMOLOTY</a></li>
+		<li><a href="/main/gokarty" >GOKARTY</a></li>
+		<li><a href="/main/rolki" >ROLKI</a></li>
+		<li><a href="/main/rowery" >ROWERY</a></li>
+	</ul>
+</div>
+<div id="tresc">
+<% if( nickname == undefined){ %>
 	<p> Nie znam Ciebie </p>
 <% } else { %>
 	<p> Witaj <%= nickname %></p>
 <% } %>
+</div>
+<div id="panelside"></div>
+<script>
+	$('#panelup ul li').first().find('a').click(function(event){
+		event.preventDefault();
+		$.get('/main/auta',function(data){
+			$('#tresc').html(data);
+		});
+	});
+
+	$('#panelup ul li').first().next().find('a').click(function(event){
+		event.preventDefault();
+		$.get('/main/samoloty',function(data){
+			$('#tresc').html(data);
+		});
+	});
+</script>

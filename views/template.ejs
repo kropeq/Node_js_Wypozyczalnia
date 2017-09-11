@@ -8,11 +8,15 @@
 	<script src="main.js"></script>
 </head>
 <body>
-<div id="header">
-	<ul>
-		<li><a href="/login">Login</a></li>
-		<li><a href="/register">Register</a></li>
-	</ul>
+<div id="header">		
+		<% console.log('Nick w sesji: '+nick); %>
+		<li><a id="headernews" href="/main">Wypożyczalnia</a></li>
+		<% if((nick == undefined) || (nick == "")){%>
+		<li><a id="headerlogin" href="/login">Zaloguj</a></li>
+		<% } else { %>
+		<li><a id="headerlogin" href="/logout">Wyloguj(<%=nick%>)</a></li>
+		<% } %>
+		
 </div>
 <div id="content">
 </div>

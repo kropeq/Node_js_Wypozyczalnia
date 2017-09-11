@@ -1,0 +1,14 @@
+<p>Wylogowuje...</p>
+<script>
+window.setTimeout(
+	function(){
+		$.get('/main',function(data){
+			$('#content').html(data);
+			$('#headerlogin').text('Zaloguj').attr('href','/login');
+		});
+	},
+	2000
+);
+
+
+</script>

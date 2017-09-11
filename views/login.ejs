@@ -1,29 +1,74 @@
+<div id="formLogin">
 <div class="row">
 	<label>Login: </label>
-	<input type="text" id="iLogin" placeholder="Wpisz nickname"></input>
+	<input type="text" id="lLogin" placeholder="Wpisz nickname"></input>
 </div>
 <script>
-
-	$("#test").click(function(event){
+	$("#login").click(function(event){
 		event.preventDefault();
-		var login = document.getElementById("iLogin").value;
-		var pass = document.getElementById("iPassword").value;
+		var ilogin = $("#lLogin").val();
+		var ipass = $("#lPassword").val();
 		$.post(
 			'/login', 
 			{
-				nick: login,
-				pass: pass
+				nick: ilogin,
+				pass: ipass
 			}, 
 			function(data){
+				$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
 			}
 		);
 		$.get('/main', function(data) {
 			$("#content").html(data);
 		});
 	});
+
+	$('#register').click(function(event){
+		event.preventDefault();
+		var info = $('#info');
+		var rlogin = $('#rLogin').val();
+		var rpass = $('#rPassword').val();
+		var rpass2 = $('#rPassword2').val();
+		if(rpass==rpass2){
+			info.text('');
+			$("#lLogin").val(rlogin);
+			$("#lPassword").val(rpass);
+			$('#toggleButton').click();
+			$('#rLogin').val('');
+			$('#rPassword').val('');
+		} else {
+			info.text('Hasła różnią się od siebie!');
+		}
+	});
+
+	$('#toggleButton').click(function(event){
+		event.preventDefault();
+		$('#formLogin').slideToggle(1000);
+		$('#formRegister').slideToggle(1000);
+	});
 </script>
 <div class="row">
 	<label>Hasło: </label>
-	<input type="password" id="iPassword"></input>
-	<a href="/main" id="test">Zaloguj</a>
+	<input type="password" id="lPassword"></input>
+	<a href="/main" id="login">Zaloguj</a>
+</div>
+</div>
+<div class="row">
+	 <span id="toggleButton">Rejestracja</span>
+</div>
+<div id="formRegister" style="display: none">
+<div class="row">
+	<label>Login: </label>
+	<input type="text" id="rLogin" placeholder="Wpisz nickname"></input>
+</div>
+<div class="row">
+	<label>Hasło: </label>
+	<input type="password" id="rPassword"></input>
+</div>
+<div id="info" style="color: red; display: block"></div>
+<div class="row">
+	<label>Powtórz: </label>
+	<input type="password" id="rPassword2"></input>
+	<a href="/login" id="register">Zarejestruj</a>
+</div>
 </div>

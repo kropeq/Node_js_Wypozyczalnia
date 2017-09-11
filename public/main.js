@@ -1,14 +1,19 @@
-loadContent = function(href){
+loadContent = function(href,element){
 	$.get(href, function(data){
-		$("#content").html(data);
+		element.html(data);
 	});
 }
 
 $(document).ready(function(){
-	$("#header ul li a").click(function(event){
+	$("#header li").first().find('a').click(function(event){
 		event.preventDefault(); // zabrania wykonania domyślnej akcji przycisku
 		var href = $(this).attr('href');
-		loadContent(href);
+		loadContent(href,$('#content'));
 	});
-	loadContent("/main");
+	$("#header li").first().next().find('a').click(function(event){
+		event.preventDefault(); // zabrania wykonania domyślnej akcji przycisku
+		var href = $(this).attr('href');
+		loadContent(href,$('#tresc'));
+	});
+	loadContent("/main",$('#content'));
 });

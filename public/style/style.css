@@ -1,53 +1,134 @@
 body {
-	margin: 0;			/* usuwamy margines strony */
-	padding-left: 0;	/* usuwamy odstępy strony */
-}
-
-div {
-	height: 400px;
-	width: 400px;
-	display: block;
-}
-
-a {
-	text-decoration: none;	/* ukrywa hiperlink */
-}
-ul {
+	background-image: url('../images/background.png');
+	background-repeat: no-repeat;
 	margin: 0;
-	list-style-type: none;	/* ukrywa kropki w liście */
+	height: 100%;
 }
-
-p {
-	margin: 0;
-}
-
+/* ukrywa hiperlink */
+a {	text-decoration: none; }
+/* ukrywa kropki w liście */
+ul { list-style-type: none;	margin: 0 auto; }
 li {
+	list-style-type: none;
+}
+
+/* --------------------------------- */
+/* --------- TEMPLATE.EJS ---------- */
+/* --------------------------------- */
+#header {
+	position: fixed;
+	width: 1000px;
+	top: 0;	left: 0px;	right: 0px;
+	height: 50px;
+	margin: auto;
+	/*background-color: grey;*/
+	background-image: url('../images/header.png');
+}
+
+#header #headerlogin {
+	position: absolute;
+	width: 200px;
+	right: 10px;
+	text-align: right;
+}
+
+#header #headernews {
+	margin: 0;
+	position: absolute;
+	width: 100px;
+	left: -10px;
+	top: 18px;
+}
+
+#header li {
 	height: 26px;
 	width: 100px;
 	float: left;
 	margin-left: 5px;
 	margin-top: 5px;
-	background-color: lightgreen;
 	text-align: center;
 	padding-top: 4px;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 5px;
 }
 
-#main {
-	width: 100%;
-	height: 100%;
+#header li a {
+	color: white;
+	font-weight: bold;
 }
 
 #content {
-	background-color: lightblue;
-	height: 700px;
-	width: 100%;
+	position: fixed;
+	width: 1000px;
+	top: 50px;	bottom: 0;	left: 0;	right: 0;
+	margin: auto;
+	/*background-color: lightgrey;*/
+	background-color: rgba(224,224,224,0.6);
 }
 
-#header {
-	height: 50px;
-	width: 100%;
-	background-color: red;
+/* --------------------------------- */
+/* --------- LOGIN.EJS ------------- */
+/* --------------------------------- */
+.row label {
+	display: inline-block;
+	height: 30px;
+	width: 60px;
+	text-align: right;
+	padding-top: 3px;
 }
+.row input {
+	margin-top: 5px;
+	height: 30px;
+	width: 150px;
+	border-width: 1px;
+	border-color: white;
+	border-radius: 5px;
+	padding-left: 5px;
+}
+#formLogin, #formRegister {
+	width: 400px;
+	margin: 0 auto;
+}
+
+/* --------------------------------- */
+/* ----------- MAIN.EJS ------------ */
+/* --------------------------------- */
+/*#main {	width: 100%;	height: 100%;}*/
+#content #panelup {
+	position: absolute;
+	top: 0px;
+	height: 30px;
+	left: 0; right: 0;
+	background-color: blue;
+}
+
+#content #panelside {
+	position: absolute;
+	top: 30px;
+	bottom: 0px;
+	right: 0px;
+	width: 200px;
+	/*background-color: red;*/
+}
+
+#content #tresc {
+	position: absolute;
+	top: 40px;
+	left: 10px;
+	right: 210px;
+	bottom: 10px;
+	/*background-color: violet;*/
+}
+#content #panelup ul {
+	padding-left: 10px;
+	padding-top: 4px;
+}
+
+#content #panelup li {
+	font-weight: bold;
+	padding-right: 5px;
+	display: inline-block;
+}
+
+#content #panelup a {
+	color: white;
+}
+
