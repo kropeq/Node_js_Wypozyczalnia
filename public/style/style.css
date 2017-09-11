@@ -1,0 +1,13 @@
+div {
+	height: 400px;
+	width: 400px;
+	display: block;
+}
+
+#zielony {
+	background-color: green;
+}
+
+#czerwony {
+	background-color: red;
+}

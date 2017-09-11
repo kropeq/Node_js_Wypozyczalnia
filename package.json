@@ -1,0 +1,13 @@
+{
+  "name": "NodeApp",
+  "version": "1.0.0",
+  "description": "Wypozyczalnia",
+  "scripts": {
+    "start": "node serwer.js"
+  },
+  "dependencies": {
+    "ejs": "",
+    "express" : ""
+  },
+  "author": "Michał Jaworowski"
+}
