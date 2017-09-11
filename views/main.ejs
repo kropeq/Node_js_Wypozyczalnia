@@ -1,7 +1,7 @@
 <div id="panelup">
 	<ul>
-		<li><a href="/main/auta" >AUTA</a></li>
-		<li><a href="/main/samoloty" >SAMOLOTY</a></li>
+		<li><a href="/main/cars" >AUTA</a></li>
+		<li><a href="/cars/description" >SAMOLOTY</a></li>
 		<li><a href="/main/gokarty" >GOKARTY</a></li>
 		<li><a href="/main/rolki" >ROLKI</a></li>
 		<li><a href="/main/rowery" >ROWERY</a></li>
@@ -18,14 +18,14 @@
 <script>
 	$('#panelup ul li').first().find('a').click(function(event){
 		event.preventDefault();
-		$.get('/main/auta',function(data){
+		$.get('/main/cars',function(data){
 			$('#tresc').html(data);
 		});
 	});
 
 	$('#panelup ul li').first().next().find('a').click(function(event){
 		event.preventDefault();
-		$.get('/main/samoloty',function(data){
+		$.get('/cars/description',function(data){
 			$('#tresc').html(data);
 		});
 	});

@@ -8,9 +8,9 @@ $(document).ready(function(){
 	$("#header li").first().find('a').click(function(event){
 		event.preventDefault(); // zabrania wykonania domyślnej akcji przycisku
 		var href = $(this).attr('href');
-		loadContent(href,$('#content'));
+		loadContent(href,$('#tresc'));
 	});
-	$("#header li").first().next().find('a').click(function(event){
+	$("#header > li").find('a').click(function(event){
 		event.preventDefault(); // zabrania wykonania domyślnej akcji przycisku
 		var href = $(this).attr('href');
 		loadContent(href,$('#tresc'));

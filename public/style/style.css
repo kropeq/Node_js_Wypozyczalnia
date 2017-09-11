@@ -4,8 +4,9 @@ body {
 	margin: 0;
 	height: 100%;
 }
-/* ukrywa hiperlink */
-a {	text-decoration: none; }
+
+a {	text-decoration: none; /* ukrywa hiperlink */
+	outline: none; } /* ukrywa ramkę z kropek po wciśnięciu */
 /* ukrywa kropki w liście */
 ul { list-style-type: none;	margin: 0 auto; }
 li {
@@ -32,12 +33,17 @@ li {
 	text-align: right;
 }
 
-#header #headernews {
+#header div {
 	margin: 0;
 	position: absolute;
 	width: 100px;
-	left: -10px;
-	top: 18px;
+	left: 0px;
+	top: 10px;
+	width: 400px;
+}
+
+#header div li:nth-child(3){
+	width: 60px;
 }
 
 #header li {
@@ -61,7 +67,7 @@ li {
 	top: 50px;	bottom: 0;	left: 0;	right: 0;
 	margin: auto;
 	/*background-color: lightgrey;*/
-	background-color: rgba(224,224,224,0.6);
+	background-color: rgba(224,224,224,0.9);
 }
 
 /* --------------------------------- */
@@ -113,8 +119,8 @@ li {
 	position: absolute;
 	top: 40px;
 	left: 10px;
-	right: 210px;
-	bottom: 10px;
+	right: 10px;
+	/*bottom: 10px;*/
 	/*background-color: violet;*/
 }
 #content #panelup ul {
@@ -132,3 +138,69 @@ li {
 	color: white;
 }
 
+/* --------------------------------- */
+/* ----------- AUTA.EJS ------------ */
+/* --------------------------------- */
+
+#content #tresc #image {
+	position: absolute;
+	top: 0px;	left: 30px;
+	width: 600px;
+	height: 400px;
+	background-color: lightyellow;
+}
+
+#content #tresc #technicaldata {
+	position: absolute;
+	top: 0px;	left: 640px;
+	width: 310px;
+	height: 400px;
+	/*background-color: lightblue;*/
+}
+
+#content #tresc #additional {
+	position: absolute;
+	top: 410px; left: 30px;	right: 30px;
+	/*background-color: yellow;*/
+}
+
+#content #tresc #technicaldata table{
+	position: absolute;
+	left: 0px; right: 0px;
+	margin: auto;
+}
+
+#technicaldata table tr td:first-child {
+	color: grey;
+}
+
+#technicaldata table tr td:nth-child(2) {
+	font-weight: bold;
+}
+#content #tresc #additional label {
+	font-size: 16px;
+	font-weight: bold;
+	font-family: arial;
+}
+/* --------------------------------- */
+/* ----------- CARS.EJS ------------ */
+/* --------------------------------- */
+#content #tresc #itemrow #miniimg img {
+	height: 100px;
+	width: auto;
+}
+
+#content #tresc #itemrow #miniimg {
+	width: 160px;
+}
+
+#content #tresc #itemrow {
+	/*display: block;*/
+	padding-bottom: 10px;
+	margin-top: 10px;
+	border-bottom: 1px solid grey;
+}
+
+#content #tresc #itemrow table{
+
+}

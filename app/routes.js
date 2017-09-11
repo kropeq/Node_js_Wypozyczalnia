@@ -11,12 +11,12 @@ router.get('/main', function(req,res){
 	res.render('main.ejs',{nickname: req.session.nick });
 });
 
-router.get('/main/auta', function(req,res){
-	res.render('main/auta.ejs',{nickname: req.session.nick });
+router.get('/main/cars', function(req,res){
+	res.render('main/cars.ejs',{nickname: req.session.nick });
 });
 
-router.get('/main/samoloty', function(req,res){
-	res.render('main/samoloty.ejs',{nickname: req.session.nick });
+router.get('/cars/description', function(req,res){
+	res.render('cars/description.ejs',{nickname: req.session.nick });
 });
 
 router.get('/login', function(req,res){
@@ -37,5 +37,6 @@ router.post('/login', function(req,res){
 	res.send('logged');	// bez response nie zapamiętuje sesji
 	//console.log("Nickname: "+login+" Hasło: "+pass);
 });
+
 
 module.exports = router;
