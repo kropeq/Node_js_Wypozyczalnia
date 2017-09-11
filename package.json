@@ -6,8 +6,10 @@
     "start": "node serwer.js"
   },
   "dependencies": {
+    "body-parser" : "",
     "ejs": "",
-    "express" : ""
+    "express" : "",
+    "express-session" : ""
   },
   "author": "Michał Jaworowski"
 }

@@ -1,0 +1,29 @@
+<div class="row">
+	<label>Login: </label>
+	<input type="text" id="iLogin" placeholder="Wpisz nickname"></input>
+</div>
+<script>
+
+	$("#test").click(function(event){
+		event.preventDefault();
+		var login = document.getElementById("iLogin").value;
+		var pass = document.getElementById("iPassword").value;
+		$.post(
+			'/login', 
+			{
+				nick: login,
+				pass: pass
+			}, 
+			function(data){
+			}
+		);
+		$.get('/main', function(data) {
+			$("#content").html(data);
+		});
+	});
+</script>
+<div class="row">
+	<label>Hasło: </label>
+	<input type="password" id="iPassword"></input>
+	<a href="/main" id="test">Zaloguj</a>
+</div>
