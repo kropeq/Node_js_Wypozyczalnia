@@ -47,7 +47,8 @@ router.post('/login', function(req,res){
 				req.session.nick = login;
 				req.session.pass = pass;
 				console.log('Zalogowano na konto: '+login);
-				res.send('logged');	// bez response nie zapamiętuje sesji
+				//res.send('logged');	// bez response nie zapamiętuje sesji
+				res.redirect('/');
 			} else {
 				console.log('Nie znaleziono pasujacych danych logowania w bazie...');
 			}

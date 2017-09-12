@@ -18,6 +18,12 @@
 			// on success function
 			function(data){
 				$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
+				$('#header').prepend(
+					'<div>'+
+						'<li><a id="headerorders" href="/reservation">Rezerwacje</a></li>'+
+						'<li><a id="headeradditem" href="/additem">Udostępnij</a></li>'+
+						'<li><a id="headerprofile" href="/profile">Profil</a></li>'+
+					'</div>');
 				$.get('/main', function(data) {
 					$("#content").html(data);
 				});

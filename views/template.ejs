@@ -9,13 +9,16 @@
 </head>
 <body>
 <div id="header">
-		<% //console.log('Nick w sesji: '+nick); %>
+		<% //console.log('Nick w sesji: '+nick); 
+		if((nick == undefined) || (nick == "")){ %> 
+		 <% } else  { %>
 		<div>
 			<li><a id="headerorders" href="/reservation">Rezerwacje</a></li>
 			<li><a id="headeradditem" href="/additem">Udostępnij</a></li>
 			<li><a id="headerprofile" href="/profile">Profil</a></li>
 		</div>
-		<% if((nick == undefined) || (nick == "")){%>
+		<% } %>
+		<% if((nick == undefined) || (nick == "")){ %>
 		<li><a id="headerlogin" href="/login">Zaloguj</a></li>
 		<% } else { %>
 		<li><a id="headerlogin" href="/logout">Wyloguj(<%=nick%>)</a></li>
