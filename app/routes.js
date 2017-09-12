@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
+var Cars = require('./models/cars');
 
 router.get('/', function(req,res){
 	res.render('template.ejs', {
@@ -13,7 +13,13 @@ router.get('/main', function(req,res){
 });
 
 router.get('/cars', function(req,res){
-	res.render('cars/cars.ejs',{nickname: req.session.nick, fs: fs });
+	 Cars.find().sort({"brand": 1}).exec(function(err, cars){
+		if(!err){
+			res.render('cars/cars.ejs',{nickname: req.session.nick, cars: cars });
+		} else {
+			res.send('Error: '+err);
+		};
+	});
 });
 
 router.get('/cars/description', function(req,res){

@@ -1,17 +1,10 @@
-<% 
-var stream = fs.readFileSync('././app/collections/cars.txt').toString();
-var lines = stream.split('\r\n');
-for(var i in lines){ 
-	var cars = lines[i].split(','); 
-	if(cars.length > 2){ // zeby nie wypisywalo ostatniej pustej linii
-	%>
-	<div id="itemrow">
-		<div id="miniimg"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
-		<table>
-		<tr><td>Marka:</td><td><%= cars[0] %></td><td>Model:</td><td><%= cars[1] %></td></tr>
-		<tr><td>Wersja:</td><td><%= cars[2] %></td><td>Rocznik:</td><td><%= cars[3] %></td></tr>
-		<tr><td>Pojemność:</td><td><%= cars[4] %></td><td>Moc:</td><td><%= cars[5] %></td></tr>
+<% for(var i in cars){ %>
+<div id="itemrow">
+	<div id="miniimg"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
+	<table>
+		<tr><td>Marka:</td><td><%= cars[i].brand %></td><td>Model:</td><td><%= cars[i].model %></td></tr>
+		<tr><td>Wersja:</td><td><%= cars[i].version %></td><td>Rocznik:</td><td><%= cars[i].year %></td></tr>
+		<tr><td>Pojemność:</td><td><%= cars[i].capacity %></td><td>Moc:</td><td><%= cars[i].power %></td></tr>
 	</table>
-	</div>
-	<% } %>
+</div>
 <% } %>

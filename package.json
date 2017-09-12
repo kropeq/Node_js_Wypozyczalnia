@@ -9,7 +9,8 @@
     "body-parser" : "",
     "ejs": "",
     "express" : "",
-    "express-session" : ""
+    "express-session" : "",
+    "mongoose" : "4.4"
   },
   "author": "Michał Jaworowski"
 }

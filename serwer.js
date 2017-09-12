@@ -36,6 +36,10 @@ var http = require('http').Server(app);
 // definicje ścieżek zawarte w /app/routes.js
 app.use(require('./app/routes'));
 
+// baza danych mlab.com
+var mongoose = require('mongoose');
+mongoose.connect("mongodb://kropeq:test123@ds133044.mlab.com:33044/wypozyczalnia");
+
 // serwer http na express dziala na porcie 8080
 http.listen(8080, function(req,res){
 	console.log("Server is running on localhost:8080");
