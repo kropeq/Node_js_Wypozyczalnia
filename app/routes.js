@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 
 router.get('/', function(req,res){
 	res.render('template.ejs', {
@@ -11,8 +12,8 @@ router.get('/main', function(req,res){
 	res.render('main.ejs',{nickname: req.session.nick });
 });
 
-router.get('/main/cars', function(req,res){
-	res.render('main/cars.ejs',{nickname: req.session.nick });
+router.get('/cars', function(req,res){
+	res.render('cars/cars.ejs',{nickname: req.session.nick, fs: fs });
 });
 
 router.get('/cars/description', function(req,res){

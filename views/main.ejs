@@ -1,32 +1,31 @@
-<div id="panelup">
-	<ul>
-		<li><a href="/main/cars" >AUTA</a></li>
-		<li><a href="/cars/description" >SAMOLOTY</a></li>
-		<li><a href="/main/gokarty" >GOKARTY</a></li>
-		<li><a href="/main/rolki" >ROLKI</a></li>
-		<li><a href="/main/rowery" >ROWERY</a></li>
-	</ul>
-</div>
-<div id="tresc">
 <% if( nickname == undefined){ %>
 	<p> Nie znam Ciebie </p>
 <% } else { %>
 	<p> Witaj <%= nickname %></p>
 <% } %>
-</div>
-<div id="panelside"></div>
 <script>
-	$('#panelup ul li').first().find('a').click(function(event){
+	$('#panelup > ul > li').first().find('a').on('click',function (event) {
 		event.preventDefault();
-		$.get('/main/cars',function(data){
-			$('#tresc').html(data);
+		$.get('/main',function(data){
+			$('#content').html(data);
 		});
 	});
 
-	$('#panelup ul li').first().next().find('a').click(function(event){
+	$('#panelup > ul > li').first().next().find('a').click(function(event){
 		event.preventDefault();
-		$.get('/cars/description',function(data){
-			$('#tresc').html(data);
+		$.get('/cars',function(data){
+			$('#content').html(data);
 		});
 	});
+
+	$('#panelup > ul > li').last().find('a').click(function(event){
+		event.preventDefault();
+		$.get('/cars/description',function(data){
+			$('#content').html(data);
+		});
+	});
+
+
+
+
 </script>
