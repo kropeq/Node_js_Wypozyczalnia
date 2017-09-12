@@ -17,16 +17,27 @@
 			}, 
 			// on success function
 			function(data){
-				$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
-				$('#header').prepend(
-					'<div>'+
+				if(data=='logged'){
+					$('#pInfo').text("");
+					$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
+					$('#header').prepend(
+						'<div>'+
 						'<li><a id="headerorders" href="/reservation">Rezerwacje</a></li>'+
 						'<li><a id="headeradditem" href="/additem">Udostępnij</a></li>'+
 						'<li><a id="headerprofile" href="/profile">Profil</a></li>'+
-					'</div>');
-				$.get('/main', function(data) {
-					$("#content").html(data);
-				});
+						'</div>');
+					$('#headerprofile').click(function(event) {
+						event.preventDefault();
+						$.get('/profile',function(data){
+							$('#content').html(data);
+						});
+					});
+					$.get('/main', function(data) {
+						$("#content").html(data);
+					});
+				} else if ( data=='wrong pass'){
+					$('#pInfo').text("Niepoprawne dane");
+				}
 			}
 		);
 		
@@ -43,32 +54,50 @@
 		var rcountry = $('#rCountry').val();
 		var rphone = $('#rPhone').val();
 		var remail = $('#rEmail').val();
-
-		$.post(
-			'/register', 
-			{
-				nick: rlogin,
-				pass: rpass,
-				name: rname,
-				surname: rsurname,
-				country: rcountry,
-				phone: rphone,
-				email: remail
-			}, 
-			function(data){}
-		);
 		if(rpass==rpass2){
 			info.text('');
-			$("#lLogin").val(rlogin);
-			$("#lPassword").val(rpass);
-			$('#toggleButton').click();
-			$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('');
+			$.post(
+				'/register', 
+				{
+					nick: rlogin,
+					pass: rpass,
+					name: rname,
+					surname: rsurname,
+					country: rcountry,
+					phone: rphone,
+					email: remail
+				}, 
+				function(data){
+					if(data=="registered"){
+						$('#pInfo').text("");
+						$("#lLogin").val(rlogin);
+						$("#lPassword").val(rpass);
+						$('#toggleButton').click();
+						$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('');
+					} else if (data="occupied"){
+						$('#pInfo').text("Ten nick jest zajęty!");
+						$('#rLogin').css({'background-color':'rgb(255,135,132)'});
+					}
+				}
+			);
 		} else {
 			info.text('Hasła różnią się od siebie!');
 		}
 	});
 
 	$('#toggleButton').click(function(event){
+		$('#pInfo').text("");
+		$('#rLogin').css({'background-color':'white'});
+		// jak niewidoczne jest logowanie to po kliknieciu wysunie sie wlasnie logowanie
+		if($('#formLogin:visible').length == 0){
+			// podczas animacji element #lLogin jest jeszcze niewidoczny, trzeba poczekac 1s
+			setTimeout(function(){ $('#lLogin').focus(); },1000);
+		} 
+		// jak niewidoczna jest rejestracja to po kliknieciu wysunie sie wlasnie rejestracja
+		if($('#formRegister:visible').length == 0){
+			// podczas animacji element #rLogin jest jeszcze niewidoczny, trzeba poczekac 1s
+			setTimeout(function(){ $('#rLogin').focus(); },1000);
+		} 
 		event.preventDefault();
 		$('#formLogin').slideToggle(1000);
 		$('#formRegister').slideToggle(1000);
@@ -118,4 +147,7 @@
 	<input type="text" id="rEmail" placeholder="Wpisz adres e-mail"></input>
 </div>
 <a href="/register" id="register">Zarejestruj</a>
+</div>
+<div class="row" style="color: red; font-weight: bold; font-size: 24px;">
+	<div id="pInfo"></div>
 </div>

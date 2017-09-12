@@ -23,6 +23,18 @@ router.get('/cars', function(req,res){
 	});
 });
 
+router.get('/profile',function(req,res){
+	Users.findOne({"nickname":req.session.nick},function(err, user){
+		if(!err){
+			if(user==null){
+				console.log('Nie znaleziono profilu tego użytkownika.');
+			} else {
+				res.render('profile.ejs',{ user: user });
+			}
+		} else console.log('Error w profilu: '+err);
+	});
+});
+
 router.get('/cars/description', function(req,res){
 	res.render('cars/description.ejs',{nickname: req.session.nick });
 });
@@ -47,9 +59,9 @@ router.post('/login', function(req,res){
 				req.session.nick = login;
 				req.session.pass = pass;
 				console.log('Zalogowano na konto: '+login);
-				//res.send('logged');	// bez response nie zapamiętuje sesji
-				res.redirect('/');
+				res.send('logged'); // bez response nie zapamiętuje sesji
 			} else {
+				res.send('wrong pass');
 				console.log('Nie znaleziono pasujacych danych logowania w bazie...');
 			}
 		} else {
@@ -80,9 +92,46 @@ router.post('/register', function(req,res){
 	newUser.save(function(err){
 		if(!err) {
 			console.log("Zapisalem nowego uzytkownika: "+login+"...");
+			req.session.nick = login;
+			req.session.pass = pass;
+			res.send('registered');	// bez response nie zapamiętuje sesji
 		} else {
-			console.log("Cos poszlo nie tak z nowym userem... ");
+			if(err.code==11000){
+				console.log("Proba dodania usera '"+login+"', ktory juz istnieje... ");
+				res.send('occupied');
+			} else {
+				console.log("Cos poszlo nie tak z nowym userem... "+err);
+			}
+			
 		}
+	});
+});
+
+router.post('/profile', function(req,res){
+	var login = req.session.nick;
+	var pass = req.body.pass;
+	var name = req.body.name;
+	var surname = req.body.surname;
+	var country = req.body.country;
+	var phone = req.body.phone;
+	var email = req.body.email;
+
+	// sprawdzamy czy jest w bazie przed edycja
+	Users.findOne({"nickname":req.session.nick},function(err,result){
+		if(!err){
+			if(result != null){
+				Users.update(
+					{ nickname: req.session.nick }, 
+					{ $set: { password: pass, name: name, surname: surname,
+							  country: country, phone: phone, email: email }
+					},function(err,raw){
+						if(err) console.log('Update: '+err);
+						console.log("Update raw: "+raw);
+					}
+				);
+				console.log('Niby zrobilem update'+req.session.nick);
+			} else console.log('Nie znaleziono profilu tego uzytkownika...');
+		} else console.log('Blad podczas edycji profilu: '+err);
 	});
 	req.session.nick = login;
 	req.session.pass = pass;

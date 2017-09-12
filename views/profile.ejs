@@ -1,0 +1,39 @@
+<div id="pheader">Profil: <%= user.nickname %></div>
+<div id="profile">
+	<table>
+		<tr><td>Nowe hasło:</td><td><input type="password" name="pPassword" id="pPassword"></input></td></tr>
+		<tr><td>Powtórz hasło:</td><td><input type="password" name="pPassword2" id="pPassword2"></input></td></tr>
+		<tr><td>Imie:</td><td><input type="text" name="pName" id="pName"></input></td></tr>
+		<tr><td>Nazwisko:</td><td><input type="text" name="pSurname" id="pSurname" value='<%= user.surname %>'></input></td></tr>
+		<tr><td>Kraj:</td><td><input type="text" name="pCountry" id="pCountry" value='<%= user.country %>'></input></td></tr>
+		<tr><td>Telefon:</td><td><input type="text" name="pPhone" id="pPhone" value='<%= user.phone %>'></input></td></tr>
+		<tr><td>E-mail:</td><td><input type="text" name="pEmail" id="pEmail" value='<%= user.email %>'></input></td></tr>
+		<tr><td></td><td><a href="/profile" id="updateProfile">AKTUALIZUJ</a></td></tr>
+	</table>
+</div>
+<div id="pInfo"></div>
+<script> 
+	// przykladowe wypisanie
+	$('#pName').val("<%= user.name %>"); 
+
+	$('#updateProfile').on('click',function(event){
+		event.preventDefault();
+		var password = $('#pPassword').val();
+		var password2 = $('#pPassword2').val();
+		if(password==password2){
+			var name = $('#pName').val();
+			var surname = $('#pSurname').val();
+			var country = $('#pCountry').val();
+			var phone = $('#pPhone').val();
+			var email = $('#pEmail').val();
+			$.post('/profile',{ pass: password,	name: name,	surname: surname,
+								country: country, phone: phone,	email: email
+				},function(data){
+					$.get('/main',function(data){
+						$('#content').html(data);
+					});
+				}
+			);
+		}
+	});
+</script>

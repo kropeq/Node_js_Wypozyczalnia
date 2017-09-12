@@ -133,7 +133,36 @@ li {
 #panelup ul > li ul li a:hover, #panelup ul > li ul li:hover > a {
      text-decoration: none; color: #fff; background-color: #f26c4f;
 }
+/* --------------------------------- */
+/* --------- PROFILE.EJS ----------- */
+/* --------------------------------- */
+#pheader {
+	position: absolute;
+	top: 30px; left: 0; right: 0;
+	margin: auto;
+	width: 400px;
+	font-size: 20px;
+	font-weight: bold;
+	color: rgb(157, 0, 210);
+	background-color: orange;
+	text-align: center;
+	padding: 3px 0px 5px 0;
+	border-radius: 10px 10px 0 0;
+}
 
+#profile {
+	position: absolute;
+	top: 62px; left: 0; right: 0;
+	margin: auto;
+	width: 394px;
+	border: 3px solid orange;
+	background-color: bisque;
+}
+
+#profile table {
+	padding: 10px 0 10px 0;
+	margin: auto;
+}
 
 /* --------------------------------- */
 /* ------- DESCRIPTION.EJS --------- */
