@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Cars = require('./models/cars');
+var Users = require('./models/users');
 
 router.get('/', function(req,res){
 	res.render('template.ejs', {
@@ -31,6 +32,7 @@ router.get('/login', function(req,res){
 });
 
 router.get('/logout', function(req,res){
+	console.log('Wylogowano z konta: ' + req.session.nick);
 	req.session.nick = undefined;
 	req.session.pass = undefined;
 	res.render('logout.ejs');
@@ -39,10 +41,51 @@ router.get('/logout', function(req,res){
 router.post('/login', function(req,res){
 	var login = req.body.nick;
 	var pass = req.body.pass;
+	Users.findOne({"nickname":req.body.nick, "password":req.body.pass},function(err,result){
+		if(!err){
+			if (result!=null){
+				req.session.nick = login;
+				req.session.pass = pass;
+				console.log('Zalogowano na konto: '+login);
+				res.send('logged');	// bez response nie zapamiętuje sesji
+			} else {
+				console.log('Nie znaleziono pasujacych danych logowania w bazie...');
+			}
+		} else {
+			console.log('Blad podczas logowania: '+err);
+		}
+	});
+});
+
+router.post('/register', function(req,res){
+	var login = req.body.nick;
+	var pass = req.body.pass;
+	var name = req.body.name;
+	var surname = req.body.surname;
+	var country = req.body.country;
+	var phone = req.body.phone;
+	var email = req.body.email;
+
+	var newUser = new Users({
+		nickname: login,
+		password: pass,
+		name: name,
+		surname: surname,
+		country: country,
+		phone: phone,
+		email: email,
+		priviliges: "user"
+	});
+	newUser.save(function(err){
+		if(!err) {
+			console.log("Zapisalem nowego uzytkownika: "+login+"...");
+		} else {
+			console.log("Cos poszlo nie tak z nowym userem... ");
+		}
+	});
 	req.session.nick = login;
 	req.session.pass = pass;
 	res.send('logged');	// bez response nie zapamiętuje sesji
-	//console.log("Nickname: "+login+" Hasło: "+pass);
 });
 
 

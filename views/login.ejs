@@ -4,6 +4,7 @@
 	<input type="text" id="lLogin" placeholder="Wpisz nickname"></input>
 </div>
 <script>
+	$('#lLogin').focus();
 	$("#login").click(function(event){
 		event.preventDefault();
 		var ilogin = $("#lLogin").val();
@@ -14,13 +15,15 @@
 				nick: ilogin,
 				pass: ipass
 			}, 
+			// on success function
 			function(data){
 				$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
+				$.get('/main', function(data) {
+					$("#content").html(data);
+				});
 			}
 		);
-		$.get('/main', function(data) {
-			$("#content").html(data);
-		});
+		
 	});
 
 	$('#register').click(function(event){
@@ -29,13 +32,31 @@
 		var rlogin = $('#rLogin').val();
 		var rpass = $('#rPassword').val();
 		var rpass2 = $('#rPassword2').val();
+		var rname = $('#rName').val();
+		var rsurname = $('#rSurname').val();
+		var rcountry = $('#rCountry').val();
+		var rphone = $('#rPhone').val();
+		var remail = $('#rEmail').val();
+
+		$.post(
+			'/register', 
+			{
+				nick: rlogin,
+				pass: rpass,
+				name: rname,
+				surname: rsurname,
+				country: rcountry,
+				phone: rphone,
+				email: remail
+			}, 
+			function(data){}
+		);
 		if(rpass==rpass2){
 			info.text('');
 			$("#lLogin").val(rlogin);
 			$("#lPassword").val(rpass);
 			$('#toggleButton').click();
-			$('#rLogin').val('');
-			$('#rPassword').val('');
+			$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('');
 		} else {
 			info.text('Hasła różnią się od siebie!');
 		}
@@ -59,7 +80,7 @@
 <div id="formRegister" style="display: none">
 <div class="row">
 	<label>Login: </label>
-	<input type="text" id="rLogin" placeholder="Wpisz nickname"></input>
+	<input type="text" id="rLogin" placeholder="Wpisz pseudonim"></input>
 </div>
 <div class="row">
 	<label>Hasło: </label>
@@ -69,6 +90,26 @@
 <div class="row">
 	<label>Powtórz: </label>
 	<input type="password" id="rPassword2"></input>
-	<a href="/login" id="register">Zarejestruj</a>
 </div>
+<div class="row">
+	<label>Imie: </label>
+	<input type="text" id="rName" placeholder="Wpisz swoje imie"></input>
+</div>
+<div class="row">
+	<label>Nazwisko: </label>
+	<input type="text" id="rSurname" placeholder="Wpisz swoje nazwisko"></input>
+</div>
+<div class="row">
+	<label>Kraj: </label>
+	<input type="text" id="rCountry" placeholder="Wpisz swoj kraj"></input>
+</div>
+<div class="row">
+	<label>Telefon: </label>
+	<input type="text" id="rPhone" placeholder="Wpisz nr telefonu"></input>
+</div>
+<div class="row">
+	<label>E-mail: </label>
+	<input type="text" id="rEmail" placeholder="Wpisz adres e-mail"></input>
+</div>
+<a href="/register" id="register">Zarejestruj</a>
 </div>
