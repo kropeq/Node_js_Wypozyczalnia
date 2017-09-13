@@ -170,6 +170,18 @@ li {
 	font-weight: bold;
 	font-size: 15px;
 }
+/* --------------------------------- */
+/* ------------ AD.EJS ------------- */
+/* --------------------------------- */
+#ad th {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: left;
+}
+
+#ad tr td:last-child {
+	text-align: center;
+}
 
 /* --------------------------------- */
 /* ------- DESCRIPTION.EJS --------- */

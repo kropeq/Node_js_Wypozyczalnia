@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Cars = require('./models/cars');
 var Users = require('./models/users');
+var Awaiting = require('./models/awaiting');
 
 router.get('/', function(req,res){
 	res.render('template.ejs', {
@@ -59,6 +60,14 @@ router.get('/priviliges',function(req,res){
 		else if(users!=null) res.render('priviliges.ejs',{users: users});
 		else console.log('Nie znaleziono uzytkownikow do przywileji');
 	});
+});
+
+router.get('/ad',function(req,res){
+	if(req.session.nick==undefined){
+		res.redirect('/main');
+	} else {
+		res.render('ad.ejs');
+	}
 });
 
 router.post('/login', function(req,res){
@@ -178,5 +187,30 @@ router.post('/priviliges/:id',function(req,res){
 	});
 });
 
+router.post('/proposal',function(req,res){
+	var awaiting = new Awaiting({
+		brand: req.body.brand,
+		model: req.body.model,
+		version: req.body.version,
+		year: req.body.year,
+		capacity: req.body.capacity,
+		power: req.body.power,
+		fuel: req.body.fuel,
+		gearbox: req.body.gearbox,
+		drive: req.body.drive,
+		type: req.body.type,
+		doors: req.body.doors,
+		seats: req.body.seats,
+		wheel: req.body.wheel,
+		vat: req.body.vat,
+		place: req.body.place
+	});
+	awaiting.save(function(err){
+		if(!err) {
+			console.log('Dodana nowa propozycja ogloszenia. ');
+			res.send('added');
+		} else console.log('Blad zapisu nowej propozycji ogloszeni: '+err);
+	});
+});
 
 module.exports = router;
