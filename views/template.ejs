@@ -9,21 +9,27 @@
 </head>
 <body>
 <div id="header">
-		<% //console.log('Nick w sesji: '+nick); 
-		if((nick == undefined) || (nick == "")){ %> 
+		<% //console.log('Nick w sesji: '+nickname); 
+		if((nickname == undefined) || (nickname == "")){ %> 
 		 <% } else  { %>
 		<div>
 			<li><a id="headerorders" href="/reservation">Rezerwacje</a></li>
 			<li><a id="headeradditem" href="/additem">Udostępnij</a></li>
 			<li><a id="headerprofile" href="/profile">Profil</a></li>
+			<% console.log('Przywileje w sesji EJS: '+priviliges); %>
+			<% if(priviliges=="admin" || priviliges =="headadmin"){ %>
+				<li><a id="headerwaiting" href="/waiting">Oczekujące</a></li>
+			<% } %>
+			<% if(priviliges=="headadmin"){ %>
+				<li><a id="headerpriviliges" href="/priviliges">Przywileje</a></li>
+			<% } %>
 		</div>
 		<% } %>
-		<% if((nick == undefined) || (nick == "")){ %>
+		<% if((nickname == undefined) || (nickname == "")){ %>
 		<li><a id="headerlogin" href="/login">Zaloguj</a></li>
 		<% } else { %>
-		<li><a id="headerlogin" href="/logout">Wyloguj(<%=nick%>)</a></li>
+		<li><a id="headerlogin" href="/logout">Wyloguj(<%=nickname%>)</a></li>
 		<% } %>
-		
 </div>
 <div id="panelup">
 	<ul>

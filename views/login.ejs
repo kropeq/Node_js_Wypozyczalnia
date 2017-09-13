@@ -17,15 +17,23 @@
 			}, 
 			// on success function
 			function(data){
-				if(data=='logged'){
-					$('#pInfo').text("");
-					$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
-					$('#header').prepend(
-						'<div>'+
+				if(data.response=='logged'){
+					var begin = '<div>'+
 						'<li><a id="headerorders" href="/reservation">Rezerwacje</a></li>'+
 						'<li><a id="headeradditem" href="/additem">Udostępnij</a></li>'+
-						'<li><a id="headerprofile" href="/profile">Profil</a></li>'+
-						'</div>');
+						'<li><a id="headerprofile" href="/profile">Profil</a></li>';
+					var adminPart = '<li><a id="headerwaiting" href="/waiting">Oczekujące</a></li>';
+					var headadminPart = '<li><a id="headerpriviliges" href="/priviliges">Przywileje</a></li>';
+					var end = '</div>';
+					$('#pInfo').text("");
+					$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
+					if(data.priviliges=='user'){
+						$('#header').prepend(begin+end);
+					} else if(data.priviliges=='admin'){
+						$('#header').prepend(begin+adminPart+end);
+					} else if(data.priviliges=='headadmin'){
+						$('#header').prepend(begin+adminPart+headadminPart+end);
+					}
 					$('#headerprofile').click(function(event) {
 						event.preventDefault();
 						$.get('/profile',function(data){
@@ -35,7 +43,7 @@
 					$.get('/main', function(data) {
 						$("#content").html(data);
 					});
-				} else if ( data=='wrong pass'){
+				} else if ( data.response=='wrong pass'){
 					$('#pInfo').text("Niepoprawne dane");
 				}
 			}

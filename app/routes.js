@@ -4,8 +4,10 @@ var Cars = require('./models/cars');
 var Users = require('./models/users');
 
 router.get('/', function(req,res){
+	console.log('Przywilej sesji START: '+req.session.privi);
 	res.render('template.ejs', {
-		nick: req.session.nick
+		nickname: req.session.nick,
+		priviliges: req.session.privi
 	});
 });
 
@@ -47,21 +49,23 @@ router.get('/logout', function(req,res){
 	console.log('Wylogowano z konta: ' + req.session.nick);
 	req.session.nick = undefined;
 	req.session.pass = undefined;
+	req.session.priviliges = undefined;
 	res.render('logout.ejs');
 });
 
 router.post('/login', function(req,res){
 	var login = req.body.nick;
 	var pass = req.body.pass;
-	Users.findOne({"nickname":req.body.nick, "password":req.body.pass},function(err,result){
+	Users.findOne({"nickname":req.body.nick, "password":req.body.pass},function(err,user){
 		if(!err){
-			if (result!=null){
+			if (user!=null){
 				req.session.nick = login;
 				req.session.pass = pass;
-				console.log('Zalogowano na konto: '+login);
-				res.send('logged'); // bez response nie zapamiętuje sesji
+				req.session.privi = user.priviliges;
+				console.log('Zalogowano na konto: '+login+' jako '+user.priviliges);
+				res.send({response: 'logged',priviliges: user.priviliges}); // bez response nie zapamiętuje sesji
 			} else {
-				res.send('wrong pass');
+				res.send({response: 'wrong pass', priviliges: ""});
 				console.log('Nie znaleziono pasujacych danych logowania w bazie...');
 			}
 		} else {
