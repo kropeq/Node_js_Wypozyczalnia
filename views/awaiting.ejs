@@ -1,0 +1,36 @@
+<% for(var i in adverts){ %>
+<div id="itemrow">
+	<div id="miniimg"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
+	<table>
+		<tr>
+			<td>Marka:</td><td><%= adverts[i].brand %></td>
+			<td>Model:</td><td><%= adverts[i].model %></td>
+			<td>Wersja:</td><td><%= adverts[i].version %></td>
+			<td>Rocznik:</td><td><%= adverts[i].year %></td>
+		</tr>
+		<tr>
+			<td>Pojemność:</td><td><%= adverts[i].capacity %></td>
+			<td>Moc:</td><td><%= adverts[i].power %></td>
+			<td>Rodzaj paliwa:</td><td><%= adverts[i].fuel %></td>
+			<td>Skrzynia biegów:</td><td><%= adverts[i].gearbox %></td>
+		</tr>
+		<tr>
+			<td>Napęd:</td><td><%= adverts[i].drive %></td>
+			<td>Typ:</td><td><%= adverts[i].type %></td>
+			<td>Liczba drzwi:</td><td><%= adverts[i].doors %></td>
+			<td>Liczba siedzeń:</td><td><%= adverts[i].seats %></td>
+		</tr>
+		<tr>
+			<td>Kierownica:</td><td><%= adverts[i].wheel %></td>
+			<td>Faktura VAT:</td><td><%= adverts[i].vat %></td>
+			<td>Punkt odbioru:</td><td name="place"><%= adverts[i].place %></td>
+			<td></td><td></td>
+		</tr>
+	</table>
+</div>
+<% } %>
+<script>
+	$("td[name='place']").each(function(){
+		$(this).text($(this).text().substring(0,10)+'...');
+	});
+</script>

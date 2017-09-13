@@ -70,6 +70,19 @@ router.get('/ad',function(req,res){
 	}
 });
 
+router.get('/awaiting',function(req,res){
+	if(req.session.nick==undefined){
+		res.redirect('/main');
+	} else {
+		Awaiting.find({},function(err,awaiting){
+			if(err) console.log('Blad zakladki oczekujace: '+err);
+			else if(awaiting!=null) res.render('awaiting.ejs',{adverts: awaiting});
+			else console.log('Nie znaleziono proponowanych ofert...');
+		});
+	}
+	
+});
+
 router.post('/login', function(req,res){
 	var login = req.body.nick;
 	var pass = req.body.pass;
