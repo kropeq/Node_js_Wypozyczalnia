@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
 var Cars = require('./models/cars');
 var Users = require('./models/users');
 
 router.get('/', function(req,res){
-	console.log('Przywilej sesji START: '+req.session.privi);
 	res.render('template.ejs', {
 		nickname: req.session.nick,
 		priviliges: req.session.privi
@@ -51,6 +51,14 @@ router.get('/logout', function(req,res){
 	req.session.pass = undefined;
 	req.session.priviliges = undefined;
 	res.render('logout.ejs');
+});
+
+router.get('/priviliges',function(req,res){
+	Users.find({},function(err,users){
+		if(err) console.log('Blad zakladki przywileje: '+err);
+		else if(users!=null) res.render('priviliges.ejs',{users: users});
+		else console.log('Nie znaleziono uzytkownikow do przywileji');
+	});
 });
 
 router.post('/login', function(req,res){
@@ -129,17 +137,45 @@ router.post('/profile', function(req,res){
 					{ $set: { password: pass, name: name, surname: surname,
 							  country: country, phone: phone, email: email }
 					},function(err,raw){
-						if(err) console.log('Update: '+err);
-						console.log("Update raw: "+raw);
+						if(err) console.log('Update profile: '+err);
+						else {
+							res.send('updated');
+							req.session.pass = pass;
+							console.log("Update profile raw: "+raw);
+						}
 					}
 				);
-				console.log('Niby zrobilem update'+req.session.nick);
+				console.log('Zrobilem update profilu: '+req.session.nick);
 			} else console.log('Nie znaleziono profilu tego uzytkownika...');
 		} else console.log('Blad podczas edycji profilu: '+err);
 	});
-	req.session.nick = login;
-	req.session.pass = pass;
-	res.send('logged');	// bez response nie zapamiętuje sesji
+});
+
+router.post('/priviliges/:id',function(req,res){
+	var nickname = req.body.nickname;
+	var id = req.params.id;
+	id = id.substr(1); // usuwam ":" sprzed parametru id
+	var objectid = mongoose.Types.ObjectId(id);
+	var newPriviliges = req.body.newPriviliges;
+	// sprawdzamy czy jest w bazie przed edycja
+	Users.findOne({ _id : objectid } ,function(err,result){
+		if(!err){
+			if(result != null){
+				Users.update(
+					{ _id : objectid }, 
+					{ $set: { priviliges: newPriviliges }
+					},function(err,raw){
+						if(err) console.log('Update priviliges: '+err);
+						else {
+							res.send('updated');
+							console.log("Update priviliges raw: "+raw);
+						}
+					}
+				);
+				console.log('Zrobilem update przywilejow: '+nickname);
+			} else console.log('Nie znaleziono id tego uzytkownika by zmienic przywileje...');
+		} else console.log('Blad podczas edycji przywilejow: '+err);
+	});
 });
 
 

@@ -1,0 +1,39 @@
+<table id="priviliges">
+	<thead><tr><th>USERNAME</th><th>PRZYWILEJE</th><th></th><th></th></tr></thead>
+	<tbody>
+		<% for( var i in users){
+			if(users[i].priviliges=="headadmin"){ %>
+				<tr>
+					<td><%= users[i].nickname %></td>
+					<td><%= users[i].priviliges %></td>
+					<td></td>
+					<td></td>
+				</tr>
+			<% } else { %>
+				<tr>
+					<td><%= users[i].nickname %></td>
+					<td><input type="text" value="<%= users[i].priviliges %>"></input></td>
+					<td><a href="/priviliges/:<%= users[i]._id %>" id="<%= users[i]._id %>">UPDATE</a></td>
+					<td></td>
+				</tr>
+				<script>
+					$('#<%= users[i]._id %>').on('click',function(event){
+						var priviliges = $('#<%= users[i]._id %>').parent().prevAll('td:first').children().first().val();
+						var nickname = '<%= users[i].nickname %>';
+						event.preventDefault();
+						$.post('/priviliges/:<%= users[i]._id %>',{newPriviliges : priviliges, nickname: nickname }, function(data){
+							if(data=="updated"){
+								$('#prInfo').text('Zaktualizowano: '+nickname);
+								setTimeout(function(){
+									$('#prInfo').text('');
+								},3000);
+							}
+						});
+					});				
+					
+				</script>
+			<% } %>
+		<% } %>
+	</tbody>
+</table>
+<div id="prInfo" style="color: green; font-size: 20px; font-weight: bold;"></div>

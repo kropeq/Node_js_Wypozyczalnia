@@ -40,6 +40,13 @@
 							$('#content').html(data);
 						});
 					});
+					$('#headerpriviliges').click(function(event) {
+						event.preventDefault();
+						$.get('/priviliges',function(data){
+							$('#content').html(data);
+						});
+					});
+
 					$.get('/main', function(data) {
 						$("#content").html(data);
 					});

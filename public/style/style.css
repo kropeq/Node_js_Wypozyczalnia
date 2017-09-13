@@ -163,6 +163,13 @@ li {
 	padding: 10px 0 10px 0;
 	margin: auto;
 }
+/* --------------------------------- */
+/* -------- PRIVILIGES.EJS --------- */
+/* --------------------------------- */
+#priviliges thead {
+	font-weight: bold;
+	font-size: 15px;
+}
 
 /* --------------------------------- */
 /* ------- DESCRIPTION.EJS --------- */
