@@ -1,36 +1,92 @@
 <% for(var i in adverts){ %>
-<div id="itemrow">
+<div id="itemrow" name="<%= adverts[i]._id %>">
 	<div id="miniimg"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
 	<table>
-		<tr>
-			<td>Marka:</td><td><%= adverts[i].brand %></td>
-			<td>Model:</td><td><%= adverts[i].model %></td>
-			<td>Wersja:</td><td><%= adverts[i].version %></td>
-			<td>Rocznik:</td><td><%= adverts[i].year %></td>
-		</tr>
-		<tr>
-			<td>Pojemność:</td><td><%= adverts[i].capacity %></td>
-			<td>Moc:</td><td><%= adverts[i].power %></td>
-			<td>Rodzaj paliwa:</td><td><%= adverts[i].fuel %></td>
-			<td>Skrzynia biegów:</td><td><%= adverts[i].gearbox %></td>
-		</tr>
-		<tr>
-			<td>Napęd:</td><td><%= adverts[i].drive %></td>
-			<td>Typ:</td><td><%= adverts[i].type %></td>
-			<td>Liczba drzwi:</td><td><%= adverts[i].doors %></td>
-			<td>Liczba siedzeń:</td><td><%= adverts[i].seats %></td>
-		</tr>
-		<tr>
-			<td>Kierownica:</td><td><%= adverts[i].wheel %></td>
-			<td>Faktura VAT:</td><td><%= adverts[i].vat %></td>
-			<td>Punkt odbioru:</td><td name="place"><%= adverts[i].place %></td>
-			<td></td><td></td>
-		</tr>
+		<tbody>
+			<tr>
+				<td>Marka:</td><td name="brand"><%= adverts[i].brand %></td>
+				<td>Model:</td><td name="model"><%= adverts[i].model %></td>
+				<td>Wersja:</td><td name="version"><%= adverts[i].version %></td>
+				<td>Rocznik:</td><td name="year"><%= adverts[i].year %></td>
+			</tr>
+			<tr>
+				<td>Pojemność:</td><td name="capacity"><%= adverts[i].capacity %></td>
+				<td>Moc:</td><td name="power"><%= adverts[i].power %></td>
+				<td>Rodzaj paliwa:</td><td name="fuel"><%= adverts[i].fuel %></td>
+				<td>Skrzynia biegów:</td><td name="gearbox"><%= adverts[i].gearbox %></td>
+			</tr>
+			<tr>
+				<td>Napęd:</td><td name="drive"><%= adverts[i].drive %></td>
+				<td>Typ:</td><td name="type"><%= adverts[i].type %></td>
+				<td>Liczba drzwi:</td><td name="doors"><%= adverts[i].doors %></td>
+				<td>Liczba siedzeń:</td><td name="seats"><%= adverts[i].seats %></td>
+			</tr>
+			<tr>
+				<td>Kierownica:</td><td name="wheel"><%= adverts[i].wheel %></td>
+				<td>Faktura VAT:</td><td name="vat"><%= adverts[i].vat %></td>
+				<td>Punkt odbioru:</td><td name="place"><%= adverts[i].place %></td>
+				<td name="accept"><a href="/awaiting/accept"><img src="images/accept.png" alt="Akceptuj"></img> AKCEPTUJ</a></td>
+				<td name="reject"><a href="/awaiting/reject"><img src="images/reject.png" alt="Odrzuć"></img> ODRZUĆ</a></td>
+			</tr>
+		</tbody>
 	</table>
 </div>
 <% } %>
 <script>
 	$("td[name='place']").each(function(){
+		// zapisanie wartosci do atrybutu elementu, poniewaz skracamy zapis
+		$(this).attr('value',$(this).text());
 		$(this).text($(this).text().substring(0,10)+'...');
+	});
+	var accept = $("td[name='accept']");
+	var reject = $("td[name='reject']");
+	accept.find("a").click(function(event){
+		event.preventDefault();
+		var tbody = $(this).parent().parent().parent();
+
+		var brand = tbody.find("td[name='brand']").text();
+		var model = tbody.find("td[name='model']").text();
+		var version = tbody.find("td[name='version']").text();
+		var year = tbody.find("td[name='year']").text();
+
+		var capacity = tbody.find("td[name='capacity']").text();
+		var power = tbody.find("td[name='power']").text();
+		var fuel = tbody.find("td[name='fuel']").text();
+		var gearbox = tbody.find("td[name='gearbox']").text();
+
+		var drive = tbody.find("td[name='drive']").text();
+		var type = tbody.find("td[name='type']").text();
+		var doors = tbody.find("td[name='doors']").text();
+		var seats = tbody.find("td[name='seats']").text();
+
+		var wheel = tbody.find("td[name='wheel']").text();
+		var vat = tbody.find("td[name='vat']").text();
+		// adresy potrafia byc dlugie, skracam wyswietlanie, a pobieram atrybut value
+		var place = tbody.find("td[name='place']").attr('value');
+		var id = tbody.parent().parent().attr('name');
+		$.post('/awaiting/accept',{
+				"brand": brand, model: model, version: version, year: year,
+				capacity: capacity, power: power, fuel: fuel, gearbox: gearbox,
+				drive: drive, type: type, doors: doors, seats: seats,
+				wheel: wheel, vat: vat, place: place, id: id
+			},function(data){
+				if(data=='accepted'){
+					alert('WSZYSTKO OK!');
+					$('div[name='+id+']').remove();
+				} else if(data=='denied'){
+					alert('Cos poszlo nie tak...');
+				}
+			}
+		);
+		console.log('Auto: '+brand+' '+model+' '+version+'  Rok: '+year);
+		console.log('      '+capacity+' '+power+' '+fuel+'  Rok: '+gearbox);
+		console.log('      '+drive+' '+type+' '+doors+'  Rok: '+seats);
+		console.log('      '+wheel+' '+vat+' '+place);
+	});
+	reject.find("a").click(function(event){
+		event.preventDefault();
+		// adresy potrafia byc dlugie, skracam wyswietlanie, a pobieram atrybut value
+		var place = $(this).parent().parent().parent().find("td[name='place']").attr('value');
+		console.log("PLACE: "+place);
 	});
 </script>

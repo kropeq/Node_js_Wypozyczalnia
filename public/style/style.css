@@ -251,3 +251,17 @@ li {
 	border-bottom: 1px solid grey;
 	height: 100px;
 }
+
+#itemrow td:nth-child(even) {
+	font-weight: bold;
+}
+
+#itemrow td a {
+	font-weight: bold;
+}
+
+#itemrow td a img {
+	width: 20px;
+	height: 20px;
+	padding: 0;
+}

@@ -83,6 +83,48 @@ router.get('/awaiting',function(req,res){
 	
 });
 
+router.post('/awaiting/accept',function(req,res){
+	if(req.session.nick==undefined){
+		res.redirect('/main');
+	} else {
+		var objectid = mongoose.Types.ObjectId(req.body.id);
+		var newCar = new Cars({
+			brand: req.body.brand,
+			model: req.body.model,
+			version: req.body.version,
+			year: req.body.year,
+			capacity: req.body.capacity,
+			power: req.body.power,
+			fuel: req.body.fuel,
+			gearbox: req.body.gearbox,
+			drive: req.body.drive,
+			type: req.body.type,
+			doors: req.body.doors,
+			seats: req.body.seats,
+			wheel: req.body.wheel,
+			vat: req.body.vat,
+			place: req.body.place
+		});
+
+		newCar.save(function(err){
+			if(!err) {
+				Awaiting.remove({ _id : objectid },function(err){
+					if(!err){
+						res.send('accepted');
+					} else {
+						res.send('denied');
+						console.log('Blad usuniecia z oczekujacych zaakceptowanego ogloszenia '+err);
+					}
+				});
+
+			} else {
+				res.send('denied');
+				console.log('Blad akceptacji ogloszenia: '+err);
+			}
+		});
+	}
+});
+
 router.post('/login', function(req,res){
 	var login = req.body.nick;
 	var pass = req.body.pass;
