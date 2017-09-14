@@ -1,0 +1,94 @@
+<table id="formeditad" name="<%= car._id %>">
+	<thead>
+		<tr><th></th><th>Uzupełnij dane</th></tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Marka:</td><td><input type="text" name="brand" value="<%= car.brand %>" placeholder="Wpisz markę"></input></td>
+			<td>Model:</td><td><input type="text" name="model" value="<%= car.model %>" placeholder="Wpisz model"></input></td>
+		</tr>
+		<tr>
+			<td>Wersja:</td><td><input type="text" name="version" value="<%= car.version %>" placeholder="Wpisz wersję"></input></td>
+			<td>Rok produkcji:</td><td><input type="text" name="year" value="<%= car.year %>" placeholder="Wpisz rok"></input></td>
+		</tr>
+		<tr>
+			<td>Pojemność skokowa:</td><td><input type="text" name="capacity" value="<%= car.capacity %>" placeholder="Wpisz pojemność"></input></td>
+			<td>Moc:</td><td><input type="text" name="power" value="<%= car.power %>" placeholder="Wpisz moc"></input></td>
+		</tr>
+		<tr>
+			<td>Rodzaj paliwa:</td><td><input type="text" name="fuel" value="<%= car.fuel %>" placeholder="Wpisz rodzaj"></input></td>
+			<td>Skrzynia biegów:</td><td><input type="text" name="gearbox" value="<%= car.gearbox %>" placeholder="Wpisz rodzaj"></input></td>
+		</tr>
+		<tr>
+			<td>Napęd:</td><td><input type="text" name="drive" value="<%= car.drive %>" placeholder="Wpisz rodzaj"></input></td>
+			<td>Typ:</td><td><input type="text" name="type" value="<%= car.type %>" placeholder="Wpisz typ auta"></input></td>
+		</tr>
+		<tr>
+			<td>Liczba drzwi:</td><td><input type="text" name="doors" value="<%= car.doors %>" placeholder="Wpisz ilość"></input></td>
+			<td>Liczba miejsc:</td><td><input type="text" name="seats" value="<%= car.seats %>" placeholder="Wpisz ilość"></input></td>
+		</tr>
+		<tr>
+			<td>Kierownica:</td><td><input type="text" name="wheel" value="<%= car.wheel %>" placeholder="Wpisz stronę"></input></td>
+			<td>Faktura VAT:</td><td><input type="text" name="vat" value="<%= car.vat %>" placeholder="Wpisz czy faktura"></input></td>
+		</tr>
+		<tr>
+			<td>Punkt odbioru:</td><td><input type="text" name="place" value="<%= car.place %>" placeholder="Wpisz adres"></input></td>
+			<td></td><td></td>
+		</tr>
+		<tr><td></td><td></td><td></td><td><a href="/cars/details/update">AKTUALIZUJ</a></td></tr>
+	</tbody>
+</table>
+
+<script>
+	$("input[name='brand']").focus();
+	$('#formeditad a').click(function(event){
+		event.preventDefault();
+		var brand = $("input[name='brand']");
+		var model = $("input[name='model']");
+		var version = $("input[name='version']");
+		var year = $("input[name='year']");
+		var capacity = $("input[name='capacity']");
+		var power = $("input[name='power']");
+		var fuel = $("input[name='fuel']");
+		var gearbox = $("input[name='gearbox']");
+		var drive = $("input[name='drive']");
+		var type = $("input[name='type']");
+		var doors = $("input[name='doors']");
+		var seats = $("input[name='seats']");
+		var wheel = $("input[name='wheel']");
+		var vat = $("input[name='vat']");
+		var place = $("input[name='place']");
+		var id = $('table').attr('name');
+		if(confirm('Jesteś pewien?')){
+			$.post('/cars/details/update',
+				{
+					brand: brand.val(),
+					model: model.val(),
+					version: version.val(),
+					year: year.val(),
+					capacity: capacity.val(),
+					power: power.val(),
+					fuel: fuel.val(),
+					gearbox: gearbox.val(),
+					drive: drive.val(),
+					type: type.val(),
+					doors: doors.val(),
+					seats: seats.val(),
+					wheel: wheel.val(),
+					vat: vat.val(),
+					place: place.val(),
+					id: id
+				},
+				function(data){
+					if(data=='updated'){
+						$.get('/cars',function(data){
+							$('#content').html(data);
+						});
+					} else {
+						alert("Coś poszło nie tak z edycją...");
+					}
+				}
+			);
+		}
+	});
+</script>

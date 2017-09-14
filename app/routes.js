@@ -19,7 +19,7 @@ router.get('/main', function(req,res){
 router.get('/cars', function(req,res){
 	 Cars.find().sort({"brand": 1}).exec(function(err, cars){
 		if(!err){
-			res.render('cars/cars.ejs',{nickname: req.session.nick, cars: cars });
+			res.render('cars/cars.ejs',{nickname: req.session.nick, priviliges: req.session.privi, cars: cars });
 		} else {
 			res.send('Error: '+err);
 		};
@@ -35,17 +35,6 @@ router.get('/profile',function(req,res){
 				res.render('profile.ejs',{ user: user });
 			}
 		} else console.log('Error w profilu: '+err);
-	});
-});
-
-router.post('/cars/details/:id', function(req,res){
-	var id = req.params.id;
-	id = id.substr(1);
-	var objectid = mongoose.Types.ObjectId(id);
-	Cars.findOne({ _id: objectid}, function(err,car){
-		if(!err){
-			res.render('cars/details.ejs',{car: car});
-		} else console.log('Blad w szczegolach ogloszenia: '+err);
 	});
 });
 
@@ -283,7 +272,78 @@ router.post('/proposal',function(req,res){
 		if(!err) {
 			console.log('Dodana nowa propozycja ogloszenia. ');
 			res.send('added');
-		} else console.log('Blad zapisu nowej propozycji ogloszeni: '+err);
+		} else console.log('Blad zapisu nowej propozycji ogloszenia: '+err);
+	});
+});
+
+router.post('/cars/details', function(req,res){
+	var id = req.body.id;
+	console.log('/cars/details  :'+id);
+	var objectid = mongoose.Types.ObjectId(id);
+	Cars.findOne({ _id: objectid}, function(err,car){
+		if(!err){
+			res.render('cars/details.ejs',{car: car});
+		} else console.log('Blad w szczegolach ogloszenia: '+err);
+	});
+});
+
+router.post('/cars/details/edit/:id',function(req,res){
+	var id = req.params.id;
+	id = id.substr(1);
+	var objectid = mongoose.Types.ObjectId(id);
+	console.log('/cars/details/edit/:id  :'+id);
+	Cars.findOne({ _id: objectid}, function(err,car){
+		if(!err){
+			res.render('cars/editad.ejs',{car: car});
+		} else console.log('Blad w edycji szczegolow ogloszenia: '+err);
+	});
+});
+
+router.post('/cars/details/update',function(req,res){
+	var id = req.body.id;
+	var objectid = mongoose.Types.ObjectId(id);
+	var brand = req.body.brand;
+	var model = req.body.model;
+	var version = req.body.version;
+	var year = req.body.year;
+	var capacity = req.body.capacity;
+	var power = req.body.power;
+	var fuel = req.body.fuel;
+	var gearbox = req.body.gearbox;
+	var drive = req.body.drive;
+	var type = req.body.type;
+	var doors = req.body.doors;
+	var seats = req.body.seats;
+	var wheel = req.body.wheel;
+	var vat = req.body.vat;
+	var place = req.body.place;
+	console.log('/cars/details/update  :'+id);
+	console.log('/cars/details/update - brand'+brand);
+	
+	// sprawdzamy czy jest w bazie przed edycja
+	Cars.findOne({ _id : objectid } ,function(err,result){
+		console.log("UPDATE FINDONE: "+result.brand);
+		if(!err){
+			if(result != null){
+				Cars.update(
+					{ _id : objectid }, 
+					{ $set: { 
+						brand: brand, model: model, version: version, year: year,
+						capacity: capacity, power: power, fuel: fuel, gearbox: gearbox,
+						drive: drive, type: type, doors: doors, seats: seats,
+						wheel: wheel, vat: vat, place: place
+						}
+					},function(err,raw){
+						if(err) console.log('Update advertisment: '+err);
+						else {
+							res.send('updated');
+							console.log("Update advertisment raw: "+raw);
+						}
+					}
+				);
+				console.log('Zrobilem update ogloszenia. ');
+			} else console.log('Nie znaleziono id tego ogloszenia by dokonac edycji...');
+		} else console.log('Blad podczas edycji ogloszenia: '+err);
 	});
 });
 

@@ -1,18 +1,29 @@
 <% for(var i in cars){ %>
 <div id="itemrow">
-	<div id="miniimg"><a href="/cars/details/<%= cars[i]._id %>" name="<%= cars[i]._id %>"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></a></div>
+	<div id="miniimg"><a href="/cars/details" name="<%= cars[i]._id %>"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></a></div>
 	<table>
 		<tr><td>Marka:</td><td><%= cars[i].brand %></td><td>Model:</td><td><%= cars[i].model %></td></tr>
 		<tr><td>Wersja:</td><td><%= cars[i].version %></td><td>Rocznik:</td><td><%= cars[i].year %></td></tr>
 		<tr><td>Pojemność:</td><td><%= cars[i].capacity %></td><td>Moc:</td><td><%= cars[i].power %></td></tr>
 	</table>
+	<% if(priviliges=="admin" || priviliges=="headadmin"){ %>
+		<div id="editad"><a href="/cars/details/edit/:<%= cars[i]._id %>" name="<%= cars[i]._id %>">Edytuj</a></div>
+	<% } %>
 </div>
 <% } %>
 <script>
-	$('#itemrow a').click(function(event){
+	$('#miniimg a').click(function(event){
 		event.preventDefault();
 		var id = $(this).attr('name');
-		$.post('/cars/details/:'+id,{id: id},function(data){
+		$.post('/cars/details',{id: id},function(data){
+			$('#content').html(data);
+		});
+	});
+	$('#editad a').click(function(event){
+		event.preventDefault();
+		var id = $(this).attr('name');
+		console.log(id);
+		$.post('/cars/details/edit/:'+id,{id: id},function(data){
 			$('#content').html(data);
 		});
 	});
