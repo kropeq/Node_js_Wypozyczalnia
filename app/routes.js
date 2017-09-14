@@ -291,7 +291,6 @@ router.post('/cars/details/edit/:id',function(req,res){
 	var id = req.params.id;
 	id = id.substr(1);
 	var objectid = mongoose.Types.ObjectId(id);
-	console.log('/cars/details/edit/:id  :'+id);
 	Cars.findOne({ _id: objectid}, function(err,car){
 		if(!err){
 			res.render('cars/editad.ejs',{car: car});
@@ -317,8 +316,6 @@ router.post('/cars/details/update',function(req,res){
 	var wheel = req.body.wheel;
 	var vat = req.body.vat;
 	var place = req.body.place;
-	console.log('/cars/details/update  :'+id);
-	console.log('/cars/details/update - brand'+brand);
 	
 	// sprawdzamy czy jest w bazie przed edycja
 	Cars.findOne({ _id : objectid } ,function(err,result){
@@ -344,6 +341,35 @@ router.post('/cars/details/update',function(req,res){
 				console.log('Zrobilem update ogloszenia. ');
 			} else console.log('Nie znaleziono id tego ogloszenia by dokonac edycji...');
 		} else console.log('Blad podczas edycji ogloszenia: '+err);
+	});
+});
+
+router.post('/cars/details/delete',function(req,res){
+	var id = req.body.id;
+	var objectid = mongoose.Types.ObjectId(id);
+	var brand = req.body.brand;
+	var model = req.body.model;
+	var version = req.body.version;
+	var year = req.body.year;
+	var capacity = req.body.capacity;
+	var power = req.body.power;
+	var fuel = req.body.fuel;
+	var gearbox = req.body.gearbox;
+	var drive = req.body.drive;
+	var type = req.body.type;
+	var doors = req.body.doors;
+	var seats = req.body.seats;
+	var wheel = req.body.wheel;
+	var vat = req.body.vat;
+	var place = req.body.place;
+
+	Cars.remove({ _id : objectid },function(err){
+		if(!err){
+			res.send('deleted');
+		} else {
+			res.send('denied');
+			console.log('Blad usuniecia ogloszenia '+err);
+		}
 	});
 });
 

@@ -35,7 +35,7 @@
 			<td>Punkt odbioru:</td><td><input type="text" name="place" value="<%= car.place %>" placeholder="Wpisz adres"></input></td>
 			<td></td><td></td>
 		</tr>
-		<tr><td></td><td></td><td></td><td><a href="/cars/details/update">AKTUALIZUJ</a></td></tr>
+		<tr><td></td><td></td><td><a href="/cars/details/update" name="update">AKTUALIZUJ</a></td><td><a href="/cars/details/delete" name="delete">USUŃ</a></td></tr>
 	</tbody>
 </table>
 
@@ -59,36 +59,74 @@
 		var vat = $("input[name='vat']");
 		var place = $("input[name='place']");
 		var id = $('table').attr('name');
-		if(confirm('Jesteś pewien?')){
-			$.post('/cars/details/update',
-				{
-					brand: brand.val(),
-					model: model.val(),
-					version: version.val(),
-					year: year.val(),
-					capacity: capacity.val(),
-					power: power.val(),
-					fuel: fuel.val(),
-					gearbox: gearbox.val(),
-					drive: drive.val(),
-					type: type.val(),
-					doors: doors.val(),
-					seats: seats.val(),
-					wheel: wheel.val(),
-					vat: vat.val(),
-					place: place.val(),
-					id: id
-				},
-				function(data){
-					if(data=='updated'){
-						$.get('/cars',function(data){
-							$('#content').html(data);
-						});
-					} else {
-						alert("Coś poszło nie tak z edycją...");
+		var attr = $(this).attr('name');
+		if(attr=="update"){
+			if(confirm('Jesteś pewien?')){
+				$.post('/cars/details/update',
+					{
+						brand: brand.val(),
+						model: model.val(),
+						version: version.val(),
+						year: year.val(),
+						capacity: capacity.val(),
+						power: power.val(),
+						fuel: fuel.val(),
+						gearbox: gearbox.val(),
+						drive: drive.val(),
+						type: type.val(),
+						doors: doors.val(),
+						seats: seats.val(),
+						wheel: wheel.val(),
+						vat: vat.val(),
+						place: place.val(),
+						id: id
+					},
+					function(data){
+						if(data=='updated'){
+							$.get('/cars',function(data){
+								$('#content').html(data);
+							});
+						} else {
+							alert("Coś poszło nie tak z edycją...");
+						}
 					}
-				}
-			);
+				);
+			} else alert("Jak przykro :((((");
+		} else if(attr=="delete"){
+			if(confirm('Jesteś pewien?')){
+				$.post('/cars/details/delete',
+					{
+						brand: brand.val(),
+						model: model.val(),
+						version: version.val(),
+						year: year.val(),
+						capacity: capacity.val(),
+						power: power.val(),
+						fuel: fuel.val(),
+						gearbox: gearbox.val(),
+						drive: drive.val(),
+						type: type.val(),
+						doors: doors.val(),
+						seats: seats.val(),
+						wheel: wheel.val(),
+						vat: vat.val(),
+						place: place.val(),
+						id: id
+					},
+					function(data){
+						if(data=='deleted'){
+							$.get('/cars',function(data){
+								$('#content').html(data);
+							});
+						} else {
+							alert("Coś poszło nie tak z usuwaniem...");
+						}
+					}
+				);
+			} else alert("Jak przykro :((((");
+		} else {
+			alert("Nie rozpoznalem akcji...");
 		}
+		
 	});
 </script>
