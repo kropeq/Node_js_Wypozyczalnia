@@ -1,3 +1,6 @@
+<% if(!adverts.length){ %>
+	<p>Brak oczekujących ogłoszeń...</p>
+<% } %>
 <% for(var i in adverts){ %>
 <div id="itemrow" name="<%= adverts[i]._id %>">
 	<div id="miniimg"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
@@ -38,10 +41,11 @@
 		$(this).attr('value',$(this).text());
 		$(this).text($(this).text().substring(0,10)+'...');
 	});
-	var accept = $("td[name='accept']");
-	var reject = $("td[name='reject']");
-	accept.find("a").click(function(event){
+	var acceptreject = $("td[name='accept'],td[name='reject']");
+	// var reject = $("td[name='reject']");
+	acceptreject.find("a").click(function(event){
 		event.preventDefault();
+		// przejsc z <a> w gore do <tbody>( a->td->tr->tbody)
 		var tbody = $(this).parent().parent().parent();
 
 		var brand = tbody.find("td[name='brand']").text();
@@ -64,29 +68,47 @@
 		// adresy potrafia byc dlugie, skracam wyswietlanie, a pobieram atrybut value
 		var place = tbody.find("td[name='place']").attr('value');
 		var id = tbody.parent().parent().attr('name');
-		$.post('/awaiting/accept',{
-				"brand": brand, model: model, version: version, year: year,
+
+		// jesli atrybutem name bylo slowo accept - to jest to przycisk akceptuj
+		if($(this).parent().attr('name')=="accept"){
+			$.post('/awaiting/accept',{
+				brand: brand, model: model, version: version, year: year,
 				capacity: capacity, power: power, fuel: fuel, gearbox: gearbox,
 				drive: drive, type: type, doors: doors, seats: seats,
 				wheel: wheel, vat: vat, place: place, id: id
-			},function(data){
-				if(data=='accepted'){
-					alert('WSZYSTKO OK!');
-					$('div[name='+id+']').remove();
-				} else if(data=='denied'){
-					alert('Cos poszlo nie tak...');
+				},function(data){
+					if(data=='accepted'){
+						alert('Zaakceptowano!');
+						$('div[name='+id+']').remove();
+						// jesli usunelismy ostatnie oczekujace to wstaw informacje o braku
+						if($('#content div').length==0){
+							$('#content').html('<p>Brak oczekujących ogłoszeń...');
+						}
+					} else if(data=='denied'){
+						alert('Cos poszlo nie tak z akceptowaniem...');
+					}
 				}
-			}
-		);
-		console.log('Auto: '+brand+' '+model+' '+version+'  Rok: '+year);
+			);
+		// jesli atrybutem name bylo slowo reject - to jest to przycisk odrzuc
+		} else if($(this).parent().attr('name')=="reject"){
+			$.post('/awaiting/reject',{ id: id },function(data){
+				if(data=='deleted'){
+					alert('Odrzucono!');
+					$('div[name='+id+']').remove();
+					// jesli usunelismy ostatnie oczekujace to wstaw informacje o braku
+					if($('#content div').length==0){
+						$('#content').html('<p>Brak oczekujących ogłoszeń...');
+					}
+				} else if(data=='denied'){
+					alert('Cos poszlo nie tak z odrzucaniem...');
+				}
+			});
+		// jesli inna wartosc atrybutu name, to nierozpoznana
+		} else alert('Nie rozpoznalem przycisku...');
+		
+		/*console.log('Auto: '+brand+' '+model+' '+version+'  Rok: '+year);
 		console.log('      '+capacity+' '+power+' '+fuel+'  Rok: '+gearbox);
 		console.log('      '+drive+' '+type+' '+doors+'  Rok: '+seats);
-		console.log('      '+wheel+' '+vat+' '+place);
-	});
-	reject.find("a").click(function(event){
-		event.preventDefault();
-		// adresy potrafia byc dlugie, skracam wyswietlanie, a pobieram atrybut value
-		var place = $(this).parent().parent().parent().find("td[name='place']").attr('value');
-		console.log("PLACE: "+place);
+		console.log('      '+wheel+' '+vat+' '+place);*/
 	});
 </script>

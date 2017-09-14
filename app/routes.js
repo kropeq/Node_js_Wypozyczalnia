@@ -125,6 +125,18 @@ router.post('/awaiting/accept',function(req,res){
 	}
 });
 
+router.post('/awaiting/reject',function(req,res){
+	var objectid = mongoose.Types.ObjectId(req.body.id);
+	Awaiting.remove({ _id : objectid },function(err){
+		if(!err){
+			res.send('deleted');
+		} else {
+			res.send('denied');
+			console.log('Blad usuniecia z oczekujacych odrzuconego ogloszenia '+err);
+		}
+	});
+});
+
 router.post('/login', function(req,res){
 	var login = req.body.nick;
 	var pass = req.body.pass;
