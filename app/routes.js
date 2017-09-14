@@ -38,8 +38,15 @@ router.get('/profile',function(req,res){
 	});
 });
 
-router.get('/cars/description', function(req,res){
-	res.render('cars/description.ejs',{nickname: req.session.nick });
+router.post('/cars/details/:id', function(req,res){
+	var id = req.params.id;
+	id = id.substr(1);
+	var objectid = mongoose.Types.ObjectId(id);
+	Cars.findOne({ _id: objectid}, function(err,car){
+		if(!err){
+			res.render('cars/details.ejs',{car: car});
+		} else console.log('Blad w szczegolach ogloszenia: '+err);
+	});
 });
 
 router.get('/login', function(req,res){

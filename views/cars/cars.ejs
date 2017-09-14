@@ -1,6 +1,6 @@
 <% for(var i in cars){ %>
 <div id="itemrow">
-	<div id="miniimg"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
+	<div id="miniimg"><a href="/cars/details/<%= cars[i]._id %>" name="<%= cars[i]._id %>"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></a></div>
 	<table>
 		<tr><td>Marka:</td><td><%= cars[i].brand %></td><td>Model:</td><td><%= cars[i].model %></td></tr>
 		<tr><td>Wersja:</td><td><%= cars[i].version %></td><td>Rocznik:</td><td><%= cars[i].year %></td></tr>
@@ -8,3 +8,12 @@
 	</table>
 </div>
 <% } %>
+<script>
+	$('#itemrow a').click(function(event){
+		event.preventDefault();
+		var id = $(this).attr('name');
+		$.post('/cars/details/:'+id,{id: id},function(data){
+			$('#content').html(data);
+		});
+	});
+</script>

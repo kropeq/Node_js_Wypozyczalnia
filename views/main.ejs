@@ -20,7 +20,7 @@
 
 	$('#panelup > ul > li').last().find('a').click(function(event){
 		event.preventDefault();
-		$.get('/cars/description',function(data){
+		$.get('/cars/details',function(data){
 			$('#content').html(data);
 		});
 	});
