@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var awaitingSchema = new mongoose.Schema({
+	owner: 'string',
 	brand: 'string',
 	model: 'string',
 	version: 'string',
@@ -14,7 +15,14 @@ var awaitingSchema = new mongoose.Schema({
 	seats: 'string',
 	wheel: 'string',
 	vat: 'string',
-	place: 'string'
+	place: 'string',
+	post_date: 'string',
+	filename1: 'string',
+	filename2: 'string',
+	filename3: 'string',
+	filename4: 'string',
+	filename5: 'string',
+	filename6: 'string'
 });
 var awaitingModel = mongoose.model('Awaiting',awaitingSchema);
 

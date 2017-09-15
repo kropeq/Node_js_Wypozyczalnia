@@ -7,32 +7,24 @@ var fs = require('fs');
 var multer = require('multer');
 // okreslenie punktu docelowego przechowywania oraz nazewnictwa dla multer
 var storage = multer.diskStorage({
-	destination: function(req,file,cb){
-		var curr_date = new Date();
-		var date_string = curr_date.getFullYear() +'_'+
-						(curr_date.getMonth()+1)+'_'+
-						curr_date.getDate()+'_'+
-						curr_date.getHours()+'_'+
-						curr_date.getMinutes()+'_'+
-						curr_date.getSeconds()+'_';
-		var dir = 'public/images/adverts/'+date_string+req.body.brand+'_'+req.body.model;
+	// pobranie obecnej daty, by rozrozniac zdjecia o tej samej nazwie
+	destination: function(req,file,cb){	
+		var brand = req.body.brand.replace(/ /g,'_');
+		var model = req.body.model.replace(/ /g,'_');
+
+		// wpierw trzeba stworzyc folder nadrzedny, a pozniej podfolder
+		var dir1 = 'public/images/adverts/'+req.session.nick;
+		var dir2 = dir1 +'/'+req.body.date+ '_' + brand+'_'+model;
+
 		// jesli nie ma folderu - stworz go
-		if(!fs.existsSync(dir)){
-			fs.mkdirSync(dir);
-		}
+		if(!fs.existsSync(dir1)) fs.mkdirSync(dir1);
+		if(!fs.existsSync(dir2)) fs.mkdirSync(dir2);
+
 		// ustalenie folderu docelowego uploadowanych zdjec
-		cb(null,dir+'/')
+		cb(null,dir2+'/')
 	},
 	filename: function(req,file,cb){
-		// pobranie obecnej daty, by rozrozniac zdjecia o tej samej nazwie
-		var curr_date = new Date();
-		var date_string = curr_date.getFullYear() +'_'+
-						(curr_date.getMonth()+1)+'_'+
-						curr_date.getDate()+'_'+
-						curr_date.getHours()+'_'+
-						curr_date.getMinutes()+'_'+
-						curr_date.getSeconds()+'_';
-		cb(null,date_string + file.originalname)
+		cb(null,req.body.date + "_" + file.originalname)
 	}
 });
 // zdefiniowanie sposobu przechowywania
@@ -98,7 +90,7 @@ router.get('/ad',function(req,res){
 	if(req.session.nick==undefined){
 		res.redirect('/main');
 	} else {
-		res.render('ad.ejs');
+		res.render('ad.ejs',{nickname: req.session.nick});
 	}
 });
 
@@ -288,6 +280,7 @@ router.post('/priviliges/:id',function(req,res){
 
 router.post('/proposal', upload.any(), function(req,res){
 	var awaiting = new Awaiting({
+		owner: req.session.nick,
 		brand: req.body.brand,
 		model: req.body.model,
 		version: req.body.version,
@@ -302,8 +295,15 @@ router.post('/proposal', upload.any(), function(req,res){
 		seats: req.body.seats,
 		wheel: req.body.wheel,
 		vat: req.body.vat,
-		place: req.body.place
-	});
+		place: req.body.place,
+		post_date: req.body.post_date,
+		filename1: req.body.filename1,
+		filename2: req.body.filename2,
+		filename3: req.body.filename3,
+		filename4: req.body.filename4,
+		filename5: req.body.filename5,
+		filename6: req.body.filename6
+	});	
 	awaiting.save(function(err){
 		if(!err) {
 			console.log('Dodana nowa propozycja ogloszenia. ');
@@ -383,22 +383,6 @@ router.post('/cars/details/update',function(req,res){
 router.post('/cars/details/delete',function(req,res){
 	var id = req.body.id;
 	var objectid = mongoose.Types.ObjectId(id);
-	var brand = req.body.brand;
-	var model = req.body.model;
-	var version = req.body.version;
-	var year = req.body.year;
-	var capacity = req.body.capacity;
-	var power = req.body.power;
-	var fuel = req.body.fuel;
-	var gearbox = req.body.gearbox;
-	var drive = req.body.drive;
-	var type = req.body.type;
-	var doors = req.body.doors;
-	var seats = req.body.seats;
-	var wheel = req.body.wheel;
-	var vat = req.body.vat;
-	var place = req.body.place;
-
 	Cars.remove({ _id : objectid },function(err){
 		if(!err){
 			res.send('deleted');

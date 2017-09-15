@@ -40,16 +40,83 @@
 	</tbody>
 </table>
 <br />
-<label for="file1">Zdjecie 1: </label><input type="file" name="file1"><br />
-<label for="file2">Zdjecie 2: </label><input type="file" name="file2"><br />
-<label for="file3">Zdjecie 3: </label><input type="file" name="file3"><br />
-<label for="file4">Zdjecie 4: </label><input type="file" name="file4"><br />
-<label for="file5">Zdjecie 5: </label><input type="file" name="file5"><br />
-<label for="file6">Zdjecie 6: </label><input type="file" name="file6"><br />
+<div id="line1"><label for="file1">Zdjecie(1): </label><a href="/" name="reset1">Anuluj</a><input type="file" name="file1"><br /></div>
+<div id="line2"><label for="file2">Zdjecie(2): </label><a href="/" name="reset2">Anuluj</a><input type="file" name="file2" disabled><br /></div>
+<div id="line3"><label for="file3">Zdjecie(3): </label><a href="/" name="reset3">Anuluj</a><input type="file" name="file3" disabled><br /></div>
+<div id="line4"><label for="file4">Zdjecie(4): </label><a href="/" name="reset4">Anuluj</a><input type="file" name="file4" disabled><br /></div>
+<div id="line5"><label for="file5">Zdjecie(5): </label><a href="/" name="reset5">Anuluj</a><input type="file" name="file5" disabled><br /></div>
+<div id="line6"><label for="file6">Zdjecie(6): </label><a href="/" name="reset6">Anuluj</a><input type="file" name="file6" disabled><br /></div>
 </form>
 <script>
+	$('#line2,#line3,#line4,#line5,#line6').hide();
+	
+	var unlock = function(nr){
+		$('input[name="file'+(nr-1)+'"]').change(function(){
+			$('input[name="file'+nr+'"]').attr('disabled',false);
+			$('#line'+nr).show();
+			//alert($('input[name="file1"]').val().replace(/C:\\fakepath\\/i, ''));
+		});
+	};
+	unlock(2);	unlock(3);	unlock(4);	unlock(5);	unlock(6);
+	var lock = function(nr){
+		$('input[name="file'+nr+'"]').attr('disabled',true);
+		$('#line'+nr).hide();
+		$('input[name="file'+nr+'"]').val('');		
+	};
+
+	$('a[name="reset1"').click(function(event){ 
+		event.preventDefault();
+		$('input[name="file1"]').val('');
+		lock(2); lock(3); lock(4); lock(5); lock(6);
+	});
+
+	$('a[name="reset2"').click(function(event){ 
+		event.preventDefault();
+		$('input[name="file2"]').val('');
+		lock(3); lock(4); lock(5); lock(6);
+	});
+
+	$('a[name="reset3"').click(function(event){ 
+		event.preventDefault();
+		$('input[name="file3"]').val('');
+		lock(4); lock(5); lock(6);
+	});
+
+	$('a[name="reset4"').click(function(event){ 
+		event.preventDefault();
+		$('input[name="file4"]').val('');
+		lock(5); lock(6);
+	});
+
+	$('a[name="reset5"').click(function(event){ 
+		event.preventDefault();
+		$('input[name="file5"]').val('');
+		lock(6);
+	});
+
+	$('a[name="reset6"').click(function(event){ 
+		event.preventDefault();
+		$('input[name="file6"]').val('');
+	});
+	
+	
+	
+
 	$("input[name='brand']").focus();
 	$('#uploadForm').submit(function(){
+		var curr_date = new Date();
+		var date_string = curr_date.getFullYear() +'_'+
+						(curr_date.getMonth()+1)+'_'+
+						curr_date.getDate()+'_'+
+						curr_date.getHours()+'_'+
+						curr_date.getMinutes()+'_'+
+						curr_date.getSeconds();
+		// musi byc prepend! jak zrobimy append to nie bedzie dzialac
+		// poniewaz type=file musi byc na koncu formularza, bo inaczej nie widzi tego co ponizej
+		$('<input />').attr('type','hidden')
+					.attr('name','date')
+					.attr('value',date_string)
+					.prependTo('#uploadForm');
 		$(this).ajaxSubmit({
 			error: function(xhr){
 				alert("ERROR");
@@ -71,6 +138,20 @@
 					var wheel = $("input[name='wheel']");
 					var vat = $("input[name='vat']");
 					var place = $("input[name='place']");
+					var date = $("input[name='date']");
+					var filename1 = $("input[name='file1']").get(0).files[0];
+					var filename2 = $("input[name='file2']").get(0).files[0];
+					var filename3 = $("input[name='file3']").get(0).files[0];
+					var filename4 = $("input[name='file4']").get(0).files[0];
+					var filename5 = $("input[name='file5']").get(0).files[0];
+					var filename6 = $("input[name='file6']").get(0).files[0];
+					filename1 = (filename1!=undefined) ? filename1.name : "";
+					filename2 = (filename2!=undefined) ? filename2.name : "";
+					filename3 = (filename3!=undefined) ? filename3.name : "";
+					filename4 = (filename4!=undefined) ? filename4.name : "";
+					filename5 = (filename5!=undefined) ? filename5.name : "";
+					filename6 = (filename6!=undefined) ? filename6.name : "";
+
 					if(confirm('Jesteś pewien?')){
 						$.post('/proposal',
 							{
@@ -88,7 +169,11 @@
 								seats: seats.val(),
 								wheel: wheel.val(),
 								vat: vat.val(),
-								place: place.val()
+								place: place.val(),
+								post_date: date.val(),
+								filename1: filename1,	filename2: filename2,
+								filename3: filename3,	filename4: filename4,
+								filename5: filename5,	filename6: filename6
 							},
 							function(data){
 								if(data=='added'){

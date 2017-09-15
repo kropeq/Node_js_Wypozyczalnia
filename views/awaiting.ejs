@@ -3,7 +3,14 @@
 <% } %>
 <% for(var i in adverts){ %>
 <div id="itemrow" name="<%= adverts[i]._id %>">
-	<div id="miniimg"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
+	<div id="miniimg">
+		<img src="images/adverts
+				/<%= adverts[i].owner %>
+				/<%= adverts[i].post_date %>_<%= adverts[i].brand %>_<%= adverts[i].model %>
+				/<%= adverts[i].post_date %>_<%= adverts[i].filename1 %>" 
+			 alt="<%= adverts[i].brand %> <%= adverts[i].model %>">
+		</img>
+	</div>
 	<table>
 		<tbody>
 			<tr>
@@ -33,9 +40,51 @@
 			</tr>
 		</tbody>
 	</table>
+	<input type="hidden" name="owner" value="<%= adverts[i].owner %>" />
+	<input type="hidden" name="post_date" value="<%= adverts[i].post_date %>" />
+	<input type="hidden" name="filename1" value="<%= adverts[i].filename1 %>" />
+	<input type="hidden" name="filename2" value="<%= adverts[i].filename2 %>" />
+	<input type="hidden" name="filename3" value="<%= adverts[i].filename3 %>" />
+	<input type="hidden" name="filename4" value="<%= adverts[i].filename4 %>" />
+	<input type="hidden" name="filename5" value="<%= adverts[i].filename5 %>" />
+	<input type="hidden" name="filename6" value="<%= adverts[i].filename6 %>" />
 </div>
 <% } %>
+	
 <script>
+	// --------- wymiana obrazkow -----------
+	$('#miniimg').one('click',function(){
+		var owner = $(this).parent().find('input[name="owner"]').val();
+		var post_date = $(this).parent().find('input[name="post_date"]').val();
+		var brand =  $(this).parent().find('td[name="brand"]').text();
+		var model =  $(this).parent().find('td[name="model"]').text();
+		var filename1 = $(this).parent().find('input[name="filename1"]').val();
+		var filename2 = $(this).parent().find('input[name="filename2"]').val();
+		var filename3 = $(this).parent().find('input[name="filename3"]').val();
+		var filename4 = $(this).parent().find('input[name="filename4"]').val();
+		var filename5 = $(this).parent().find('input[name="filename5"]').val();
+		var filename6 = $(this).parent().find('input[name="filename6"]').val();
+		var tab = [filename1,filename2,filename3,filename4,filename5,filename6];
+		var shift = tab.shift();
+		tab.push(shift);
+		shift = tab.shift();
+		tab.push(shift);
+		var img = $(this).find('img');
+		img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+shift);
+		$('#miniimg').click(function(){
+			var id = $(this).parent().attr('name');
+			var shift = tab.shift();
+			while(shift==""){
+				shift = tab.shift();
+			}
+			tab.push(shift);
+			img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+shift);
+		});
+	})
+	
+
+
+	// --------------------------------------
 	$("td[name='place']").each(function(){
 		// zapisanie wartosci do atrybutu elementu, poniewaz skracamy zapis
 		$(this).attr('value',$(this).text());
