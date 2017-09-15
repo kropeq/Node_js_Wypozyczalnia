@@ -186,6 +186,46 @@ li {
 /* --------------------------------- */
 /* ------- DESCRIPTION.EJS --------- */
 /* --------------------------------- */
+#content #lefthover {
+	position: absolute;
+	width: 100px;
+	height: 400px;
+	background-color: rgba(255,255,255,0);
+}
+
+#content #lefthover #arrow {
+	position: absolute;
+	display: none;
+	opacity: 0.5;
+	top: 165px; left: 15px;
+	width: 70px;
+	height: auto;
+}
+
+#content #righthover {
+	position: absolute;
+	top: 0;	left: 500px;
+	width: 100px;
+	height: 400px;
+	background-color: rgba(255,255,255,0);
+}
+
+#content #righthover #arrow {
+	position: absolute;
+	display: none;
+	opacity: 0.5;
+	top: 165px; left: 15px;
+	width: 70px;
+	height: auto;
+}
+
+#content #righthover:hover {
+	background-color: rgba(255,255,255,0.5);
+}
+
+#content #lefthover:hover {
+	background-color: rgba(255,255,255,0.5);
+}
 
 #content #image {
 	position: absolute;
@@ -195,7 +235,7 @@ li {
 	background-color: lightyellow;
 }
 
-#content #image img {
+#content #image #photo {
 	position: absolute;
 	height: 400px;
 	width: auto;

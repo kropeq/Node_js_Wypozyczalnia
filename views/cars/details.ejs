@@ -1,8 +1,13 @@
-<div id="image" name="<%= car.id %>"><img src="images/adverts
+<div id="image" name="<%= car.id %>">
+	<img id="photo" src="images/adverts
 				/<%= car.owner %>
 				/<%= car.post_date %>_<%= car.brand %>_<%= car.model %>
 				/<%= car.post_date %>_<%= car.filename1 %>" 
-				alt="<%= car.brand %> <%= car.model %>"></img></div>
+				alt="<%= car.brand %> <%= car.model %>">
+	</img>
+	<div id="lefthover"><img id="arrow" src="images/arrow_left.png" alt="left"></img></div>
+	<div id="righthover"><img id="arrow" src="images/arrow_right.png" alt="right"></img></div>
+</div>
 <div id="technicaldata">
 	<table>
 		<tr><td>Ogłaszający:</td><td name="owner"><%= car.owner %></td></tr>
@@ -36,32 +41,59 @@
 </div>
 
 <script>
-	$('#image').one('click',function(){
-		var owner = $(this).parent().find('td[name="owner"]').text();
-		var post_date = $(this).parent().find('td[name="post_date"]').text();
-		var brand =  $(this).parent().find('td[name="brand"]').text();
-		var model =  $(this).parent().find('td[name="model"]').text();
-		var filename1 = $(this).parent().find('input[name="filename1"]').val();
-		var filename2 = $(this).parent().find('input[name="filename2"]').val();
-		var filename3 = $(this).parent().find('input[name="filename3"]').val();
-		var filename4 = $(this).parent().find('input[name="filename4"]').val();
-		var filename5 = $(this).parent().find('input[name="filename5"]').val();
-		var filename6 = $(this).parent().find('input[name="filename6"]').val();
-		var tab = [filename1,filename2,filename3,filename4,filename5,filename6];
-		var shift = tab.shift();
-		tab.push(shift);
-		shift = tab.shift();
-		tab.push(shift);
-		var img = $(this).find('img');
-		img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+shift);
-		$('#image').click(function(){
-			var id = $(this).attr('name');
-			var shift = tab.shift();
-			while(shift==""){
-				shift = tab.shift();
-			}
-			tab.push(shift);
-			img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+shift);
+	$('#lefthover').hover(
+		// hover in
+		function(){
+			$(this).find('img').css({"display": "block"});
+		},
+		// hover out
+		function(){
+			$(this).find('img').css({"display": "none"});
+		}
+	);
+	$('#righthover').hover(
+		function(){
+			$(this).find('img').css({"display": "block"});
+		},
+		function(){
+			$(this).find('img').css({"display": "none"});
+		}
+	);
+	var owner = $('#content').find('td[name="owner"]').text();
+	var post_date = $('#content').find('td[name="post_date"]').text();
+	var brand =  $('#content').find('td[name="brand"]').text();
+	var model =  $('#content').find('td[name="model"]').text();
+	var img = $('#photo');
+	var id = $('#image').attr('name');
+	var filename1 = $('#content').find('input[name="filename1"]').val();
+	var filename2 = $('#content').find('input[name="filename2"]').val();
+	var filename3 = $('#content').find('input[name="filename3"]').val();
+	var filename4 = $('#content').find('input[name="filename4"]').val();
+	var filename5 = $('#content').find('input[name="filename5"]').val();
+	var filename6 = $('#content').find('input[name="filename6"]').val();
+	var tab = [filename1,filename2,filename3,filename4,filename5,filename6];
+	// usuwa puste stringi - zdjecia, ktorych nie umieszczono
+	tab = tab.filter(Boolean);
+
+	$('#lefthover').one('click',function(){
+		//var filename1 = $(this).parent().parent().find('input[name="filename1"]').val();
+		var pop = tab.pop();
+		tab.unshift(pop);
+		img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+pop);
+		$('#lefthover').click(function(){
+			var pop = tab.pop();
+			tab.unshift(pop);
+			img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+pop);
+		});
+	});
+
+
+	$('#righthover').one('click',function(){
+		tab.push(tab.shift());
+		img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+tab[0]);
+		$('#righthover').click(function(){
+			tab.push(tab.shift());
+			img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+tab[0]);
 		});
 	});
 </script>
