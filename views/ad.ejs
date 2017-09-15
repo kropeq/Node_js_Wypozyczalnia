@@ -1,3 +1,4 @@
+<form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
 <table id="ad">
 	<thead>
 		<tr><th></th><th>Uzupełnij dane</th></tr>
@@ -35,58 +36,80 @@
 			<td>Punkt odbioru:</td><td><input type="text" name="place" placeholder="Wpisz adres"></input></td>
 			<td></td><td></td>
 		</tr>
-		<tr><td></td><td></td><td></td><td><a href="/proposal">UMIEŚĆ</a></td></tr>
+		<tr><td></td><td></td><td></td><td><a href="/cars">UMIEŚĆ</a></td></tr>
 	</tbody>
 </table>
-
+<br />
+<label for="file1">Zdjecie 1: </label><input type="file" name="file1"><br />
+<label for="file2">Zdjecie 2: </label><input type="file" name="file2"><br />
+<label for="file3">Zdjecie 3: </label><input type="file" name="file3"><br />
+<label for="file4">Zdjecie 4: </label><input type="file" name="file4"><br />
+<label for="file5">Zdjecie 5: </label><input type="file" name="file5"><br />
+<label for="file6">Zdjecie 6: </label><input type="file" name="file6"><br />
+</form>
 <script>
 	$("input[name='brand']").focus();
-	$('#ad a').click(function(event){
-		event.preventDefault();
-		var brand = $("input[name='brand']");
-		var model = $("input[name='model']");
-		var version = $("input[name='version']");
-		var year = $("input[name='year']");
-		var capacity = $("input[name='capacity']");
-		var power = $("input[name='power']");
-		var fuel = $("input[name='fuel']");
-		var gearbox = $("input[name='gearbox']");
-		var drive = $("input[name='drive']");
-		var type = $("input[name='type']");
-		var doors = $("input[name='doors']");
-		var seats = $("input[name='seats']");
-		var wheel = $("input[name='wheel']");
-		var vat = $("input[name='vat']");
-		var place = $("input[name='place']");
-		if(confirm('Jesteś pewien?')){
-			$.post('/proposal',
-				{
-					brand: brand.val(),
-					model: model.val(),
-					version: version.val(),
-					year: year.val(),
-					capacity: capacity.val(),
-					power: power.val(),
-					fuel: fuel.val(),
-					gearbox: gearbox.val(),
-					drive: drive.val(),
-					type: type.val(),
-					doors: doors.val(),
-					seats: seats.val(),
-					wheel: wheel.val(),
-					vat: vat.val(),
-					place: place.val()
-				},
-				function(data){
-					if(data=='added'){
-						$.get('/cars',function(data){
-							$('#content').html(data);
-						});
-					} else {
-						alert("Coś poszło nie tak...");
+	$('#uploadForm').submit(function(){
+		$(this).ajaxSubmit({
+			error: function(xhr){
+				alert("ERROR");
+			},
+			success: function(response){
+				if(response="ok"){
+					var brand = $("input[name='brand']");
+					var model = $("input[name='model']");
+					var version = $("input[name='version']");
+					var year = $("input[name='year']");
+					var capacity = $("input[name='capacity']");
+					var power = $("input[name='power']");
+					var fuel = $("input[name='fuel']");
+					var gearbox = $("input[name='gearbox']");
+					var drive = $("input[name='drive']");
+					var type = $("input[name='type']");
+					var doors = $("input[name='doors']");
+					var seats = $("input[name='seats']");
+					var wheel = $("input[name='wheel']");
+					var vat = $("input[name='vat']");
+					var place = $("input[name='place']");
+					if(confirm('Jesteś pewien?')){
+						$.post('/proposal',
+							{
+								brand: brand.val(),
+								model: model.val(),
+								version: version.val(),
+								year: year.val(),
+								capacity: capacity.val(),
+								power: power.val(),
+								fuel: fuel.val(),
+								gearbox: gearbox.val(),
+								drive: drive.val(),
+								type: type.val(),
+								doors: doors.val(),
+								seats: seats.val(),
+								wheel: wheel.val(),
+								vat: vat.val(),
+								place: place.val()
+							},
+							function(data){
+								if(data=='added'){
+									$.get('/cars',function(data){
+										$('#content').html(data);
+									});
+								} else {
+									alert("Coś poszło nie tak...");
+								}
+							}
+						);
 					}
 				}
-			);
-		}
+			}
+		});
+		// KONIECZNE, BO INACZEJ NIE WYKONUJE "success" tylko laduje res.send('ok')
+		return false;
+	});
+	$('#ad a').click(function(event){
+		event.preventDefault();
+		$('#uploadForm').submit();
+		
 	});
 </script>

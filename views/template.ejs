@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="style/style.css" />
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="http://malsup.github.com/jquery.form.js"></script>
 	<script src="main.js"></script>
 </head>
 <body>
@@ -13,7 +14,7 @@
 		if((nickname == undefined) || (nickname == "")){ %> 
 		 <% } else  { %>
 		<div>
-			<li><a id="headerorders" href="/reservation">Rezerwacje</a></li>
+			<li><a id="headertest" href="/test">Test</a></li>
 			<li><a id="headerad" href="/ad">Udostępnij</a></li>
 			<li><a id="headerprofile" href="/profile">Profil</a></li>
 			<% if(priviliges=="admin" || priviliges =="headadmin"){ %>

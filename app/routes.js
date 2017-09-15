@@ -1,6 +1,42 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+// wykorzystam do stworzenia folderu jesli nie istnieje
+var fs = require('fs');
+// wykorzystuje do uploadu wielu zdjec rownoczesnie
+var multer = require('multer');
+// okreslenie punktu docelowego przechowywania oraz nazewnictwa dla multer
+var storage = multer.diskStorage({
+	destination: function(req,file,cb){
+		var curr_date = new Date();
+		var date_string = curr_date.getFullYear() +'_'+
+						(curr_date.getMonth()+1)+'_'+
+						curr_date.getDate()+'_'+
+						curr_date.getHours()+'_'+
+						curr_date.getMinutes()+'_'+
+						curr_date.getSeconds()+'_';
+		var dir = 'public/images/adverts/'+date_string+req.body.brand+'_'+req.body.model;
+		// jesli nie ma folderu - stworz go
+		if(!fs.existsSync(dir)){
+			fs.mkdirSync(dir);
+		}
+		// ustalenie folderu docelowego uploadowanych zdjec
+		cb(null,dir+'/')
+	},
+	filename: function(req,file,cb){
+		// pobranie obecnej daty, by rozrozniac zdjecia o tej samej nazwie
+		var curr_date = new Date();
+		var date_string = curr_date.getFullYear() +'_'+
+						(curr_date.getMonth()+1)+'_'+
+						curr_date.getDate()+'_'+
+						curr_date.getHours()+'_'+
+						curr_date.getMinutes()+'_'+
+						curr_date.getSeconds()+'_';
+		cb(null,date_string + file.originalname)
+	}
+});
+// zdefiniowanie sposobu przechowywania
+var upload = multer({ storage: storage });
 var Cars = require('./models/cars');
 var Users = require('./models/users');
 var Awaiting = require('./models/awaiting');
@@ -17,7 +53,7 @@ router.get('/main', function(req,res){
 });
 
 router.get('/cars', function(req,res){
-	 Cars.find().sort({"brand": 1}).exec(function(err, cars){
+	Cars.find().sort({"brand": 1}).exec(function(err, cars){
 		if(!err){
 			res.render('cars/cars.ejs',{nickname: req.session.nick, priviliges: req.session.privi, cars: cars });
 		} else {
@@ -250,7 +286,7 @@ router.post('/priviliges/:id',function(req,res){
 	});
 });
 
-router.post('/proposal',function(req,res){
+router.post('/proposal', upload.any(), function(req,res){
 	var awaiting = new Awaiting({
 		brand: req.body.brand,
 		model: req.body.model,
@@ -371,6 +407,14 @@ router.post('/cars/details/delete',function(req,res){
 			console.log('Blad usuniecia ogloszenia '+err);
 		}
 	});
+});
+
+router.post('/upload', upload.any(), function(req,res){
+	console.log('REQ FILES: '+req.files);
+	for(var i in req.files){
+		console.log(req.files[i].originalname);
+	}
+	res.send("ok");
 });
 
 module.exports = router;

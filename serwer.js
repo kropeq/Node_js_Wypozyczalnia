@@ -1,7 +1,6 @@
 var express = require('express');
 var session = require('express-session');
 var ejs = require('ejs');
-
 // sluzy do odkodowania URL, z którego pobrane są dane POST METHOD
 // za pomocą req.body.nazwa		(localhost:3000/login?nazwa=kropeq)
 var bodyParser = require('body-parser');	

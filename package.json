@@ -10,7 +10,8 @@
     "ejs": "",
     "express" : "",
     "express-session" : "",
-    "mongoose" : "4.4"
+    "mongoose" : "4.4",
+    "multer": ""
   },
   "author": "Michał Jaworowski"
 }
