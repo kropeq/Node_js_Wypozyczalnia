@@ -190,9 +190,15 @@ li {
 #content #image {
 	position: absolute;
 	top: 10px;	left: 30px;
-	width: 600px;
 	height: 400px;
+	width: auto;
 	background-color: lightyellow;
+}
+
+#content #image img {
+	position: absolute;
+	height: 400px;
+	width: auto;
 }
 
 #content #technicaldata {

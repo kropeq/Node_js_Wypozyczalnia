@@ -100,7 +100,7 @@ router.get('/awaiting',function(req,res){
 	} else {
 		Awaiting.find({},function(err,awaiting){
 			if(err) console.log('Blad zakladki oczekujace: '+err);
-			else if(awaiting!=null) res.render('awaiting.ejs',{adverts: awaiting});
+			else if(awaiting!=null) res.render('awaiting.ejs',{adverts: awaiting, acceptor: req.session.nick });
 			else console.log('Nie znaleziono proponowanych ofert...');
 		});
 	}
@@ -113,6 +113,8 @@ router.post('/awaiting/accept',function(req,res){
 	} else {
 		var objectid = mongoose.Types.ObjectId(req.body.id);
 		var newCar = new Cars({
+			owner: req.body.owner,
+			acceptor: req.body.acceptor,
 			brand: req.body.brand,
 			model: req.body.model,
 			version: req.body.version,
@@ -127,7 +129,14 @@ router.post('/awaiting/accept',function(req,res){
 			seats: req.body.seats,
 			wheel: req.body.wheel,
 			vat: req.body.vat,
-			place: req.body.place
+			place: req.body.place,
+			post_date: req.body.post_date,
+			filename1: req.body.filename1, 
+			filename2: req.body.filename2,	
+			filename3: req.body.filename3,
+			filename4: req.body.filename4, 
+			filename5: req.body.filename5,	
+			filename6: req.body.filename6
 		});
 
 		newCar.save(function(err){

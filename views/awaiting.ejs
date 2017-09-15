@@ -41,6 +41,7 @@
 		</tbody>
 	</table>
 	<input type="hidden" name="owner" value="<%= adverts[i].owner %>" />
+	<input type="hidden" name="acceptor" value="<%= acceptor %>" />
 	<input type="hidden" name="post_date" value="<%= adverts[i].post_date %>" />
 	<input type="hidden" name="filename1" value="<%= adverts[i].filename1 %>" />
 	<input type="hidden" name="filename2" value="<%= adverts[i].filename2 %>" />
@@ -118,13 +119,25 @@
 		var place = tbody.find("td[name='place']").attr('value');
 		var id = tbody.parent().parent().attr('name');
 
+		var owner = tbody.parent().parent().find('input[name="owner"]').val();
+		var acceptor = tbody.parent().parent().find('input[name="acceptor"]').val();
+		var post_date = tbody.parent().parent().find('input[name="post_date"]').val();
+		var filename1 = tbody.parent().parent().find('input[name="filename1"]').val();
+		var filename2 = tbody.parent().parent().find('input[name="filename2"]').val();
+		var filename3 = tbody.parent().parent().find('input[name="filename3"]').val();
+		var filename4 = tbody.parent().parent().find('input[name="filename4"]').val();
+		var filename5 = tbody.parent().parent().find('input[name="filename5"]').val();
+		var filename6 = tbody.parent().parent().find('input[name="filename6"]').val();
+
 		// jesli atrybutem name bylo slowo accept - to jest to przycisk akceptuj
 		if($(this).parent().attr('name')=="accept"){
 			$.post('/awaiting/accept',{
-				brand: brand, model: model, version: version, year: year,
+				owner: owner, acceptor: acceptor, brand: brand, model: model, version: version, year: year,
 				capacity: capacity, power: power, fuel: fuel, gearbox: gearbox,
 				drive: drive, type: type, doors: doors, seats: seats,
-				wheel: wheel, vat: vat, place: place, id: id
+				wheel: wheel, vat: vat, place: place, post_date: post_date, id: id,
+				filename1: filename1, filename2: filename2, filename3: filename3,
+				filename4: filename4, filename5: filename5, filename6: filename6
 				},function(data){
 					if(data=='accepted'){
 						alert('Zaakceptowano!');

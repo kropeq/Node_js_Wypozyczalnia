@@ -1,8 +1,14 @@
-<div id="image"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></div>
+<div id="image" name="<%= car.id %>"><img src="images/adverts
+				/<%= car.owner %>
+				/<%= car.post_date %>_<%= car.brand %>_<%= car.model %>
+				/<%= car.post_date %>_<%= car.filename1 %>" 
+				alt="<%= car.brand %> <%= car.model %>"></img></div>
 <div id="technicaldata">
 	<table>
-		<tr><td>Marka:</td><td><%= car.brand %></td></tr>
-		<tr><td>Model:</td><td><%= car.model %></td></tr>
+		<tr><td>Ogłaszający:</td><td name="owner"><%= car.owner %></td></tr>
+		<tr><td>Data ogłoszenia:</td><td name="post_date"><%= car.post_date %></td></tr>
+		<tr><td>Marka:</td><td name="brand"><%= car.brand %></td></tr>
+		<tr><td>Model:</td><td name="model"><%= car.model %></td></tr>
 		<tr><td>Wersja:</td><td><%= car.version %></td></tr>
 		<tr><td>Rok produkcji:</td><td><%= car.year %></td></tr>
 		<tr><td>Pojemność skokowa:</td><td><%= car.capacity %></td></tr>
@@ -17,8 +23,45 @@
 		<tr><td>Faktura VAT:</td><td><%= car.vat %></td></tr>
 		<tr><td>Punkt odbioru:</td><td><%= car.place %></td></tr>
 	</table>
+	<input type="hidden" name="filename1" value="<%= car.filename1 %>">
+	<input type="hidden" name="filename2" value="<%= car.filename2 %>">
+	<input type="hidden" name="filename3" value="<%= car.filename3 %>">
+	<input type="hidden" name="filename4" value="<%= car.filename4 %>">
+	<input type="hidden" name="filename5" value="<%= car.filename5 %>">
+	<input type="hidden" name="filename6" value="<%= car.filename6 %>">
 </div>
 <div id="additional">
 	<label>Opis dodatkowy:</label>
 	<div id="description">Auto zadbane, pierwszy właściciel.</div>
 </div>
+
+<script>
+	$('#image').one('click',function(){
+		var owner = $(this).parent().find('td[name="owner"]').text();
+		var post_date = $(this).parent().find('td[name="post_date"]').text();
+		var brand =  $(this).parent().find('td[name="brand"]').text();
+		var model =  $(this).parent().find('td[name="model"]').text();
+		var filename1 = $(this).parent().find('input[name="filename1"]').val();
+		var filename2 = $(this).parent().find('input[name="filename2"]').val();
+		var filename3 = $(this).parent().find('input[name="filename3"]').val();
+		var filename4 = $(this).parent().find('input[name="filename4"]').val();
+		var filename5 = $(this).parent().find('input[name="filename5"]').val();
+		var filename6 = $(this).parent().find('input[name="filename6"]').val();
+		var tab = [filename1,filename2,filename3,filename4,filename5,filename6];
+		var shift = tab.shift();
+		tab.push(shift);
+		shift = tab.shift();
+		tab.push(shift);
+		var img = $(this).find('img');
+		img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+shift);
+		$('#image').click(function(){
+			var id = $(this).attr('name');
+			var shift = tab.shift();
+			while(shift==""){
+				shift = tab.shift();
+			}
+			tab.push(shift);
+			img.attr('src','images/adverts/'+owner+'/'+post_date+'_'+brand+'_'+model+'/'+post_date+'_'+shift);
+		});
+	});
+</script>

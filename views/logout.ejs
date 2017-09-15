@@ -5,7 +5,10 @@ window.setTimeout(
 		$.get('/main',function(data){
 			$('#content').html(data);
 			$('#headerlogin').text('Zaloguj').attr('href','/login');
-			$('#headerorders').parent().parent().remove();
+			$('#headerprofile').parent().parent().remove();
+			$('#headerpriviliges').parent().parent().remove();
+			$('#headerawaiting').parent().parent().remove();
+			$('#headerad').parent().parent().remove();
 		});
 	},
 	2000
