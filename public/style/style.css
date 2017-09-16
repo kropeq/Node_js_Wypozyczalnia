@@ -27,9 +27,12 @@ li {
 
 #header #headerlogin {
 	position: absolute;
+	top: 8px;	right: 10px;
 	width: 200px;
-	right: 10px;
 	text-align: right;
+	text-decoration: none;
+	color: white;
+	font-weight: bold;
 }
 
 #header div {
@@ -51,6 +54,13 @@ li {
 	margin: 5px 0 0 5px;
 	text-align: center;
 	padding-top: 4px;
+	border-style: outset;
+	border-color: orange;
+	border-width: 3px;
+}
+
+#header li:hover {
+	border-style: inset;
 }
 
 #header li a {

@@ -5,10 +5,11 @@ window.setTimeout(
 		$.get('/main',function(data){
 			$('#content').html(data);
 			$('#headerlogin').text('Zaloguj').attr('href','/login');
-			$('#headerprofile').parent().parent().remove();
-			$('#headerpriviliges').parent().parent().remove();
-			$('#headerawaiting').parent().parent().remove();
-			$('#headerad').parent().parent().remove();
+			$('#headerprofile').parent().remove();
+			$('#headerpriviliges').parent().remove();
+			$('#headerawaiting').parent().remove();
+			$('#headerad').parent().remove();
+			$('#headertest').parent().remove();
 		});
 	},
 	2000

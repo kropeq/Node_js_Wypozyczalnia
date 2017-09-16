@@ -1,6 +1,10 @@
 <% for(var i in cars){ %>
 <div id="itemrow">
-	<div id="miniimg"><a href="/cars/details" name="<%= cars[i]._id %>"><img src="images/cars/mazda6.jpg" alt="Mazda 6"></img></a></div>
+	<div id="miniimg"><a href="/cars/details" name="<%= cars[i]._id %>"><img src="images/adverts
+				/<%= cars[i].owner %>
+				/<%= cars[i].post_date %>_<%= cars[i].brand %>_<%= cars[i].model %>
+				/<%= cars[i].post_date %>_<%= cars[i].filename1 %>" 
+				alt="<%= cars[i].brand %> <%= cars[i].model %>"></img></a></div>
 	<table>
 		<tr><td>Marka:</td><td><%= cars[i].brand %></td><td>Model:</td><td><%= cars[i].model %></td></tr>
 		<tr><td>Wersja:</td><td><%= cars[i].version %></td><td>Rocznik:</td><td><%= cars[i].year %></td></tr>

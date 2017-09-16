@@ -10,8 +10,7 @@
 </head>
 <body>
 <div id="header">
-		<% //console.log('Nick w sesji: '+nickname); 
-		if((nickname == undefined) || (nickname == "")){ %> 
+		<% if((nickname == undefined) || (nickname == "")){ %> 
 		 <% } else  { %>
 		<div>
 			<li><a id="headertest" href="/test">Test</a></li>
@@ -26,10 +25,11 @@
 		</div>
 		<% } %>
 		<% if((nickname == undefined) || (nickname == "")){ %>
-		<li><a id="headerlogin" href="/login">Zaloguj</a></li>
-		<% } else { %>
-		<li><a id="headerlogin" href="/logout">Wyloguj(<%=nickname%>)</a></li>
+			<a id="headerlogin" href="/login">Zaloguj</a>
+			<% } else { %>
+			<a id="headerlogin" href="/logout">Wyloguj(<%=nickname%>)</a>
 		<% } %>
+		
 </div>
 <div id="panelup">
 	<ul>

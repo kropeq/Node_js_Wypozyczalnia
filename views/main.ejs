@@ -7,21 +7,24 @@
 	$('#panelup > ul > li').first().find('a').on('click',function (event) {
 		event.preventDefault();
 		$.get('/main',function(data){
-			$('#content').html(data);
+			$('#content').slideUp(500);
+			setTimeout(function(){$('#content').html(data).slideDown(500);},500);
 		});
 	});
 
 	$('#panelup > ul > li').first().next().find('a').click(function(event){
 		event.preventDefault();
 		$.get('/cars',function(data){
-			$('#content').html(data);
+			$('#content').slideUp(500);
+			setTimeout(function(){$('#content').html(data).slideDown(500);},500);
 		});
 	});
 
 	$('#panelup > ul > li').last().find('a').click(function(event){
 		event.preventDefault();
 		$.get('/cars/details',function(data){
-			$('#content').html(data);
+			$('#content').slideUp(500);
+			setTimeout(function(){$('#content').html(data).slideDown(500);},500);
 		});
 	});
 
