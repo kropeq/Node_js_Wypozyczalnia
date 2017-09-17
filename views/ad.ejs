@@ -21,7 +21,7 @@
 		</tr>
 		<tr>
 			<td>Wersja:</td><td><select name="version" disabled></select></td>
-			<td>Rok produkcji:</td><td><input type="number" name="year" value="2017" placeholder="Wpisz rok"></input></td>
+			<td>Rok produkcji:</td><td><input type="number" name="year" value="" disabled></input></td>
 		</tr>
 		<tr>
 			<td>Pojemność skokowa:</td><td><input type="number" name="capacity" placeholder="Wpisz pojemność" value="2000"></input></td>
@@ -68,6 +68,8 @@
 			$('select[name="model"]').attr('disabled',true);
 			$('select[name="version"]').val('');
 			$('select[name="version"]').attr('disabled',true);
+			$('input[name="year"]').val('');
+			$('input[name="year"]').attr('disabled',true);
 		} else {
 			var brand = $(this).val();
 			// tablica przechowujaca znalezione modele danej marki w bazie
@@ -91,6 +93,8 @@
 			$('select[name="model"]').attr('disabled',false);
 			$('select[name="version"]').val('');
 			$('select[name="version"]').attr('disabled',true);
+			$('input[name="year"]').val('');
+			$('input[name="year"]').attr('disabled',true);
 		}
 	});
 
@@ -98,6 +102,8 @@
 		if($(this).val()=='') {
 			$('select[name="version"]').val('');
 			$('select[name="version"]').attr('disabled',true);
+			$('input[name="year"]').val('');
+			$('input[name="year"]').attr('disabled',true);
 		} else {
 			var model = $(this).val();
 			var versions = new Array();
@@ -116,6 +122,29 @@
 			}
 			$('select[name="version"]').html(options);
 			$('select[name="version"]').attr('disabled',false);
+			$('input[name="year"]').val('');
+			$('input[name="year"]').attr('disabled',true);
+		}
+	});
+
+	$('select[name="version"]').on('change',function(){
+		if($(this).val() == ""){
+			$('input[name="year"]').val("");
+			$('input[name="year"]').attr('disabled',true);
+		} else {
+			for(var i in carmodels){
+				if(	(carmodels[i].brand == $('select[name="brand"]').val()) &&
+					(carmodels[i].model == $('select[name="model"]').val()) &&
+					(carmodels[i].version == $('select[name="version"]').val())
+				){
+					var min = carmodels[i].startyear;
+					var max = carmodels[i].endyear;
+					if(max == "-") max = 2017;
+					$('input[name="year"]').attr({'min':min,'max':max}).val(min);
+				}
+			}
+			$('input[name="year"]').val(min);
+			$('input[name="year"]').attr('disabled',false);
 		}
 	});
 

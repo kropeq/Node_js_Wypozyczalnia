@@ -12,7 +12,15 @@
 			<% } else { %>
 				<tr>
 					<td><%= users[i].nickname %></td>
-					<td><input type="text" value="<%= users[i].priviliges %>"></input></td>
+					<td><select>
+						<% if(users[i].priviliges=="user"){ %>
+							<option value="<%= users[i].priviliges %>" selected><%= users[i].priviliges %></option>
+							<option value="admin">admin</option>
+						<% } else { %>
+							<option value="user">user</option>
+							<option value="<%= users[i].priviliges %>" selected><%= users[i].priviliges %></option>
+						<% } %>
+						</select></td>
 					<td><a href="/priviliges/:<%= users[i]._id %>" id="<%= users[i]._id %>">UPDATE</a></td>
 					<td></td>
 				</tr>
