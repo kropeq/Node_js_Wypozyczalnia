@@ -63,6 +63,10 @@ li {
 	border-style: inset;
 }
 
+#header li:hover a {
+	color: bisque;
+}
+
 #header li a {
 	color: white;
 	font-weight: bold;
@@ -191,6 +195,10 @@ li {
 
 #ad tr td:last-child, #formeditad tr td:last-child {
 	text-align: center;
+}
+
+#ad select {
+	width: 143px;
 }
 
 /* --------------------------------- */

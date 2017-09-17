@@ -5,38 +5,49 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td>Marka:</td><td><input type="text" name="brand" placeholder="Wpisz markę"></input></td>
-			<td>Model:</td><td><input type="text" name="model" placeholder="Wpisz model"></input></td>
+			<td>Marka:</td><td>
+				<select name="brand">
+					<option value=""></option>
+					<% var brands = new Array();
+					for(var i in carmodels){
+						var brand = carmodels[i].brand;
+						if(brands.indexOf(brand)==-1){
+							brands.push(brand); %>
+						<option value="<%= brand %>"><%= brand %></option>
+						<% }
+					} %>
+				</select></td>
+			<td>Model:</td><td><select name="model" disabled></select></td>
 		</tr>
 		<tr>
-			<td>Wersja:</td><td><input type="text" name="version" placeholder="Wpisz wersję"></input></td>
-			<td>Rok produkcji:</td><td><input type="text" name="year" placeholder="Wpisz rok"></input></td>
+			<td>Wersja:</td><td><select name="version" disabled></select></td>
+			<td>Rok produkcji:</td><td><input type="number" name="year" value="2017" placeholder="Wpisz rok"></input></td>
 		</tr>
 		<tr>
-			<td>Pojemność skokowa:</td><td><input type="text" name="capacity" placeholder="Wpisz pojemność"></input></td>
-			<td>Moc:</td><td><input type="text" name="power" placeholder="Wpisz moc"></input></td>
+			<td>Pojemność skokowa:</td><td><input type="number" name="capacity" placeholder="Wpisz pojemność" value="2000"></input></td>
+			<td>Moc:</td><td><input type="number" name="power" placeholder="Wpisz moc" value="75"></input></td>
 		</tr>
 		<tr>
-			<td>Rodzaj paliwa:</td><td><input type="text" name="fuel" placeholder="Wpisz rodzaj"></input></td>
-			<td>Skrzynia biegów:</td><td><input type="text" name="gearbox" placeholder="Wpisz rodzaj"></input></td>
+			<td>Rodzaj paliwa:</td><td><select name="fuel"><option value="Benzyna">Benzyna</option><option value="Diesel">Diesel</option><option value="Hybryda">Hybryda</option></select></td>
+			<td>Skrzynia biegów:</td><td><select name="gearbox"><option value="Manualna">Manualna</option><option value="Automatyczna">Automatyczna</option></select></td>
 		</tr>
 		<tr>
-			<td>Napęd:</td><td><input type="text" name="drive" placeholder="Wpisz rodzaj"></input></td>
-			<td>Typ:</td><td><input type="text" name="type" placeholder="Wpisz typ auta"></input></td>
+			<td>Napęd:</td><td><select name="drive"><option value="Przód">Przód</option><option value="Tył">Tył</option><option value="4x4">4x4</option></select></td>
+			<td>Typ:</td><td><select name="type"><option value="Hatchback">Hatchback</option><option value="Sedan">Sedan</option><option value="Kombi">Kombi</option></select></td>
 		</tr>
 		<tr>
-			<td>Liczba drzwi:</td><td><input type="text" name="doors" placeholder="Wpisz ilość"></input></td>
-			<td>Liczba miejsc:</td><td><input type="text" name="seats" placeholder="Wpisz ilość"></input></td>
+			<td>Liczba drzwi:</td><td><input type="number" name="doors" placeholder="Wpisz ilość" value="5"></input></td>
+			<td>Liczba miejsc:</td><td><input type="number" name="seats" placeholder="Wpisz ilość" value="5"></input></td>
 		</tr>
 		<tr>
-			<td>Kierownica:</td><td><input type="text" name="wheel" placeholder="Wpisz stronę"></input></td>
-			<td>Faktura VAT:</td><td><input type="text" name="vat" placeholder="Wpisz czy faktura"></input></td>
+			<td>Kierownica:</td><td><select name="wheel"><option value="Z lewej">Z lewej</option><option value="Z prawej">Z prawej</option></select></td>
+			<td>Faktura VAT:</td><td><input type="checkbox" name="vat"></input></td>
 		</tr>
 		<tr>
 			<td>Punkt odbioru:</td><td><input type="text" name="place" placeholder="Wpisz adres"></input></td>
 			<td></td><td></td>
 		</tr>
-		<tr><td></td><td></td><td></td><td><a href="/cars">UMIEŚĆ</a></td></tr>
+		<tr><td></td><td></td><td><a name="cancel" href="/cars" style="font-weight: bold;">ANULUJ</a></td><td><a name="send" href="/cars">UMIEŚĆ</a></td></tr>
 	</tbody>
 </table>
 <br />
@@ -47,9 +58,67 @@
 <div id="line5"><label for="file5">Zdjecie(5): </label><a href="/" name="reset5">Anuluj</a><input type="file" name="file5" disabled><br /></div>
 <div id="line6"><label for="file6">Zdjecie(6): </label><a href="/" name="reset6">Anuluj</a><input type="file" name="file6" disabled><br /></div>
 </form>
-<script>
+<script type="text/javascript">
+	var carmodels = <%-JSON.stringify(carmodels)%> ;
 	$('#line2,#line3,#line4,#line5,#line6').hide();
 	
+	$('select[name="brand"]').on('change',function(){
+		if($(this).val()=='') {
+			$('select[name="model"]').val('');
+			$('select[name="model"]').attr('disabled',true);
+			$('select[name="version"]').val('');
+			$('select[name="version"]').attr('disabled',true);
+		} else {
+			var brand = $(this).val();
+			// tablica przechowujaca znalezione modele danej marki w bazie
+			var models = new Array();
+			// przygotowanie listy modeli na podstawie danych z bazy
+			for(var i in carmodels){
+				if(carmodels[i].brand == brand){
+					if(models.indexOf(carmodels[i].model)==-1){
+						models.push(carmodels[i].model);
+					}
+				}
+			}
+			// posortowanie leksykalnie rosnaco
+			models.sort();
+			var options = "<option value=''></option>";
+			for(var i=0; i<models.length; i++){
+				var option= "<option value='" + models[i] + "'>" + models[i] + "</option>";
+				options += option;
+			}
+			$('select[name="model"]').html(options);
+			$('select[name="model"]').attr('disabled',false);
+			$('select[name="version"]').val('');
+			$('select[name="version"]').attr('disabled',true);
+		}
+	});
+
+	$('select[name="model"]').on('change',function(){
+		if($(this).val()=='') {
+			$('select[name="version"]').val('');
+			$('select[name="version"]').attr('disabled',true);
+		} else {
+			var model = $(this).val();
+			var versions = new Array();
+			for(var i in carmodels){
+				if(carmodels[i].model == model){
+					if(versions.indexOf(carmodels[i].version)==-1){
+						versions.push(carmodels[i].version);
+					}
+				}
+			}
+			versions.sort();
+			var options = "<option value=''></option>";
+			for(var i=0; i<versions.length; i++){
+				var option= "<option value='" + versions[i] + "'>" + versions[i] + "</option>";
+				options += option;
+			}
+			$('select[name="version"]').html(options);
+			$('select[name="version"]').attr('disabled',false);
+		}
+	});
+
 	var unlock = function(nr){
 		$('input[name="file'+(nr-1)+'"]').change(function(){
 			$('input[name="file'+nr+'"]').attr('disabled',false);
@@ -102,7 +171,7 @@
 	
 	
 
-	$("input[name='brand']").focus();
+	$("select[name='brand']").focus();
 	$('#uploadForm').submit(function(){
 		var curr_date = new Date();
 		var date_string = curr_date.getFullYear() +'_'+
@@ -117,84 +186,98 @@
 					.attr('name','date')
 					.attr('value',date_string)
 					.prependTo('#uploadForm');
-		$(this).ajaxSubmit({
-			error: function(xhr){
-				alert("ERROR");
-			},
-			success: function(response){
-				if(response="ok"){
-					var brand = $("input[name='brand']");
-					var model = $("input[name='model']");
-					var version = $("input[name='version']");
-					var year = $("input[name='year']");
-					var capacity = $("input[name='capacity']");
-					var power = $("input[name='power']");
-					var fuel = $("input[name='fuel']");
-					var gearbox = $("input[name='gearbox']");
-					var drive = $("input[name='drive']");
-					var type = $("input[name='type']");
-					var doors = $("input[name='doors']");
-					var seats = $("input[name='seats']");
-					var wheel = $("input[name='wheel']");
-					var vat = $("input[name='vat']");
-					var place = $("input[name='place']");
-					var date = $("input[name='date']");
-					var filename1 = $("input[name='file1']").get(0).files[0];
-					var filename2 = $("input[name='file2']").get(0).files[0];
-					var filename3 = $("input[name='file3']").get(0).files[0];
-					var filename4 = $("input[name='file4']").get(0).files[0];
-					var filename5 = $("input[name='file5']").get(0).files[0];
-					var filename6 = $("input[name='file6']").get(0).files[0];
-					filename1 = (filename1!=undefined) ? filename1.name : "";
-					filename2 = (filename2!=undefined) ? filename2.name : "";
-					filename3 = (filename3!=undefined) ? filename3.name : "";
-					filename4 = (filename4!=undefined) ? filename4.name : "";
-					filename5 = (filename5!=undefined) ? filename5.name : "";
-					filename6 = (filename6!=undefined) ? filename6.name : "";
+		if(($('input[name="file1"]').val() != '') && ($('input[name="file2"]').val() != '')){
+			$(this).ajaxSubmit({
+				error: function(xhr){
+					alert("ERROR");
+				},
+				success: function(response){
+					if(response="ok"){
+						var brand = $("select[name='brand']");
+						var model = $("select[name='model']");
+						var version = $("select[name='version']");
+						var year = $("input[name='year']");
+						var capacity = $("input[name='capacity']");
+						var power = $("input[name='power']");
+						var fuel = $("select[name='fuel']");
+						var gearbox = $("select[name='gearbox']");
+						var drive = $("select[name='drive']");
+						var type = $("select[name='type']");
+						var doors = $("input[name='doors']");
+						var seats = $("input[name='seats']");
+						var wheel = $("select[name='wheel']");
+						var vat = $("input[name='vat']").is(':checked');
+						vat = (vat) ? "Tak" : "Nie";
+						var place = $("input[name='place']");
+						var date = $("input[name='date']");
+						var filename1 = $("input[name='file1']").get(0).files[0];
+						var filename2 = $("input[name='file2']").get(0).files[0];
+						var filename3 = $("input[name='file3']").get(0).files[0];
+						var filename4 = $("input[name='file4']").get(0).files[0];
+						var filename5 = $("input[name='file5']").get(0).files[0];
+						var filename6 = $("input[name='file6']").get(0).files[0];
+						filename1 = (filename1!=undefined) ? filename1.name : "";
+						filename2 = (filename2!=undefined) ? filename2.name : "";
+						filename3 = (filename3!=undefined) ? filename3.name : "";
+						filename4 = (filename4!=undefined) ? filename4.name : "";
+						filename5 = (filename5!=undefined) ? filename5.name : "";
+						filename6 = (filename6!=undefined) ? filename6.name : "";
 
-					if(confirm('Jesteś pewien?')){
-						$.post('/proposal',
-							{
-								brand: brand.val(),
-								model: model.val(),
-								version: version.val(),
-								year: year.val(),
-								capacity: capacity.val(),
-								power: power.val(),
-								fuel: fuel.val(),
-								gearbox: gearbox.val(),
-								drive: drive.val(),
-								type: type.val(),
-								doors: doors.val(),
-								seats: seats.val(),
-								wheel: wheel.val(),
-								vat: vat.val(),
-								place: place.val(),
-								post_date: date.val(),
-								filename1: filename1,	filename2: filename2,
-								filename3: filename3,	filename4: filename4,
-								filename5: filename5,	filename6: filename6
-							},
-							function(data){
-								if(data=='added'){
-									$.get('/cars',function(data){
-										$('#content').html(data);
-									});
-								} else {
-									alert("Coś poszło nie tak...");
+						if(confirm('Jesteś pewien?')){
+							$.post('/proposal',
+								{
+									brand: brand.val(),
+									model: model.val(),
+									version: version.val(),
+									year: year.val(),
+									capacity: capacity.val() + "cm3",
+									power: power.val() + " KM",
+									fuel: fuel.val(),
+									gearbox: gearbox.val(),
+									drive: drive.val(),
+									type: type.val(),
+									doors: doors.val(),
+									seats: seats.val(),
+									wheel: wheel.val(),
+									vat: vat,
+									place: place.val(),
+									post_date: date.val(),
+									filename1: filename1,	filename2: filename2,
+									filename3: filename3,	filename4: filename4,
+									filename5: filename5,	filename6: filename6
+								},
+								function(data){
+									if(data=='added'){
+										$.get('/cars',function(data){
+											$('#content').html(data);
+										});
+									} else {
+										alert("Coś poszło nie tak...");
+									}
 								}
-							}
-						);
+							);
+						}
 					}
 				}
-			}
-		});
+			});
+		} else {
+			alert('Wymagane dodanie minimum 2 zdjęć do ogłoszenia');
+		}
 		// KONIECZNE, BO INACZEJ NIE WYKONUJE "success" tylko laduje res.send('ok')
 		return false;
 	});
-	$('#ad a').click(function(event){
+
+	$('#ad a[name="send"]').click(function(event){
 		event.preventDefault();
 		$('#uploadForm').submit();
+		
+	});
+
+	$('#ad a[name="cancel"]').click(function(event){
+		event.preventDefault();
+		$.get('/cars',function(data){
+			$('#content').html(data);
+		});
 		
 	});
 </script>

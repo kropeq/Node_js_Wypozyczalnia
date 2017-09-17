@@ -32,6 +32,7 @@ var upload = multer({ storage: storage });
 var Cars = require('./models/cars');
 var Users = require('./models/users');
 var Awaiting = require('./models/awaiting');
+var CarModels = require('./models/carmodels');
 
 router.get('/', function(req,res){
 	res.render('template.ejs', {
@@ -90,7 +91,15 @@ router.get('/ad',function(req,res){
 	if(req.session.nick==undefined){
 		res.redirect('/main');
 	} else {
-		res.render('ad.ejs',{nickname: req.session.nick});
+		CarModels.find({},function(err,carmodels){
+			if(err) console.log('Blad zakladki dodawania propozycji ogloszenia'+err);
+			else if(carmodels!=null) res.render('ad.ejs',{nickname: req.session.nick, carmodels: carmodels});
+			else {
+				res.render('<p>Błąd podczas ładowania formularza dodawania ogłoszenia. Skontaktuj się z administratorem.</p>');
+				console.log('Nie znaleziono modeli aut do przetworzenia');
+			}
+		})
+		
 	}
 });
 
@@ -104,7 +113,31 @@ router.get('/awaiting',function(req,res){
 			else console.log('Nie znaleziono proponowanych ofert...');
 		});
 	}
-	
+});
+
+router.get('/addmodel',function(req,res){
+	if(req.session.privi == 'user' || req.session.privi == undefined){
+		res.redirect('/main');
+	} else {
+		res.render('addmodel.ejs');
+	}
+});
+
+router.post('/addmodel',function(req,res){
+	var carModel = new CarModels({
+		brand: req.body.brand,
+		model: req.body.model,
+		version: req.body.version,
+		startyear: req.body.startyear,
+		endyear: req.body.endyear
+	});
+	carModel.save(function(err){
+		if(!err){
+			res.send('added');
+		} else {
+			console.log('Blad podczas dodawania nowego modelu: '+err);
+		}
+	});
 });
 
 router.post('/awaiting/accept',function(req,res){

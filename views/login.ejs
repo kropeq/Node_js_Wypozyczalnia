@@ -19,7 +19,7 @@
 			function(data){
 				if(data.response=='logged'){
 					var begin = '<div>'+
-						'<li><a id="headertest" href="/test">Test</a></li>'+
+						'<li><a id="headertest" href="/addmodel">Nowy model</a></li>'+
 						'<li><a id="headerad" href="/ad">Udostępnij</a></li>'+
 						'<li><a id="headerprofile" href="/profile">Profil</a></li>';
 					var adminPart = '<li><a id="headerawaiting" href="/awaiting">Oczekujące</a></li>';
@@ -62,7 +62,7 @@
 
 					$('#headertest').click(function(event){
 						event.preventDefault();
-						$.get('/test',function(data){
+						$.get('/addmodel',function(data){
 							$('#content').html(data);
 						});
 					});

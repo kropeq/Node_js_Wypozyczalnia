@@ -1,0 +1,51 @@
+<table id="ad">
+	<thead>
+		<tr><th></th><th>Uzupełnij dane</th></tr>
+	</thead>
+	<tbody>
+		<tr><td>Marka:</td><td><input type="text" name="brand" placeholder="Wpisz markę"></input></td></tr>
+		<tr><td>Model:</td><td><input type="text" name="model" placeholder="Wpisz model"></input></td></tr>
+		<tr><td>Wersja:</td><td><input type="text" name="version" placeholder="Wpisz wersję"></input></td></tr>
+		<tr><td>Początek produkcji:</td><td><input type="number" name="startyear" value="2017" placeholder="Wpisz rok"></input></td></tr>
+		<tr><td>Koniec produkcji:</td><td><input type="text" name="endyear" value="-" placeholder="Wpisz rok"></input></td></tr>
+	</tbody>
+</table>
+<a href="/addmodel" name="cancel" style="font-weight: bold;">ANULUJ</a>
+<a href="/addmodel" name="send">UMIEŚĆ</a>
+<script>
+	$("input[name='brand']").focus();
+	$('a[name="send"]').click(function(event){
+		event.preventDefault();
+		var brand = $("input[name='brand']");
+		var model = $("input[name='model']");
+		var version = $("input[name='version']");
+		var startyear = $("input[name='startyear']");
+		var endyear = $("input[name='endyear']");
+		if(confirm('Jesteś pewien?')){
+			$.post('/addmodel',{
+					brand: brand.val(),
+					model: model.val(),
+					version: version.val(),
+					startyear: startyear.val(),
+					endyear: endyear.val()
+				},
+				function(data){
+					if(data=='added'){
+						$.get('/cars',function(data){
+							$('#content').html(data);
+						});
+					} else {
+						alert("Coś poszło nie tak...");
+					}
+				}
+			);
+		}
+	});
+	
+	$('a[name="cancel"]').click(function(event){
+		event.preventDefault();
+		$.get('/cars',function(data){
+			$('#content').html(data);
+		});
+	});
+</script>
