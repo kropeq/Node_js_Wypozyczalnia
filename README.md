@@ -12,7 +12,7 @@ Pierwszym pomysłem była wypożyczalnia aut, jednakże zdecydowałem się, że 
 ---
 ### Role w projekcie
 
-* _główny administrator_ - możliwość modyfikacji uprawnień użytkowników, edycji i usuwania ogłoszeń + to co administrator i user.
+* _główny administrator_ - możliwość modyfikacji uprawnień użytkowników, edycji i usuwania ogłoszeń + to co administrator i user. Konto headadmina: __login__: _kropeq_, __hasło__:_test123_
 * _administrator_ - odpowiedzialność za akceptowanie/odrzucanie ogłoszeń, nadzór nad zawartością ogłoszeń, modyfikacja listy modeli aut dostępnych na rynku służące jako lista wyboru przy wstawianiu ogłoszenia, wgląd do zgłaszanych usterek( TODO ) + to co user. Konto admina: __login__: _admin_, __hasło__:_admin_
 * _użytkownik_ - możliwość umieszczania ogłoszeń aut/motocykli, prywatne wiadomości( TODO ), zgłaszanie usterek.
 
