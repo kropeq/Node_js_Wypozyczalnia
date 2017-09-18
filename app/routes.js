@@ -246,8 +246,6 @@ router.post('/register', function(req,res){
 	newUser.save(function(err){
 		if(!err) {
 			console.log("Zapisalem nowego uzytkownika: "+login+"...");
-			req.session.nick = login;
-			req.session.pass = pass;
 			res.send('registered');	// bez response nie zapamiętuje sesji
 		} else {
 			if(err.code==11000){

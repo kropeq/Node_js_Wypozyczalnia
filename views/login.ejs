@@ -3,141 +3,6 @@
 	<label>Login: </label>
 	<input type="text" id="lLogin" placeholder="Wpisz nickname"></input>
 </div>
-<script>
-	$('#lLogin').focus();
-	$("#login").click(function(event){
-		event.preventDefault();
-		var ilogin = $("#lLogin").val();
-		var ipass = $("#lPassword").val();
-		$.post(
-			'/login', 
-			{
-				nick: ilogin,
-				pass: ipass
-			}, 
-			// on success function
-			function(data){
-				if(data.response=='logged'){
-					var begin = '<div>'+
-						'<li><a id="headertest" href="/addmodel">Nowy model</a></li>'+
-						'<li><a id="headerad" href="/ad">Udostępnij</a></li>'+
-						'<li><a id="headerprofile" href="/profile">Profil</a></li>';
-					var adminPart = '<li><a id="headerawaiting" href="/awaiting">Oczekujące</a></li>';
-					var headadminPart = '<li><a id="headerpriviliges" href="/priviliges">Przywileje</a></li>';
-					var end = '</div>';
-					$('#pInfo').text("");
-					$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
-					if(data.priviliges=='user'){
-						$('#header').prepend(begin+end);
-					} else if(data.priviliges=='admin'){
-						$('#header').prepend(begin+adminPart+end);
-					} else if(data.priviliges=='headadmin'){
-						$('#header').prepend(begin+adminPart+headadminPart+end);
-					}
-					$('#headerprofile').click(function(event) {
-						event.preventDefault();
-						$.get('/profile',function(data){
-							$('#content').html(data);
-						});
-					});
-					$('#headerpriviliges').click(function(event) {
-						event.preventDefault();
-						$.get('/priviliges',function(data){
-							$('#content').html(data);
-						});
-					});
-					$('#headerad').click(function(event){
-						event.preventDefault();
-						$.get('/ad',function(data){
-							$('#content').html(data);
-						});
-					});
-
-					$('#headerawaiting').click(function(event){
-						event.preventDefault();
-						$.get('/awaiting',function(data){
-							$('#content').html(data);
-						});
-					});
-
-					$('#headertest').click(function(event){
-						event.preventDefault();
-						$.get('/addmodel',function(data){
-							$('#content').html(data);
-						});
-					});
-
-					$.get('/main', function(data) {
-						$("#content").html(data);
-					});
-				} else if ( data.response=='wrong pass'){
-					$('#pInfo').text("Niepoprawne dane");
-				}
-			}
-		);
-		
-	});
-
-	$('#register').click(function(event){
-		event.preventDefault();
-		var info = $('#info');
-		var rlogin = $('#rLogin').val();
-		var rpass = $('#rPassword').val();
-		var rpass2 = $('#rPassword2').val();
-		var rname = $('#rName').val();
-		var rsurname = $('#rSurname').val();
-		var rcountry = $('#rCountry').val();
-		var rphone = $('#rPhone').val();
-		var remail = $('#rEmail').val();
-		if(rpass==rpass2){
-			info.text('');
-			$.post(
-				'/register', 
-				{
-					nick: rlogin,
-					pass: rpass,
-					name: rname,
-					surname: rsurname,
-					country: rcountry,
-					phone: rphone,
-					email: remail
-				}, 
-				function(data){
-					if(data=="registered"){
-						$('#pInfo').text("");
-						$("#lLogin").val(rlogin);
-						$("#lPassword").val(rpass);
-						$('#toggleButton').click();
-						$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('');
-					} else if (data="occupied"){
-						$('#pInfo').text("Ten nick jest zajęty!");
-						$('#rLogin').css({'background-color':'rgb(255,135,132)'});
-					}
-				}
-			);
-		} else {
-			info.text('Hasła różnią się od siebie!');
-		}
-	});
-
-	$('#toggleButton').click(function(event){
-		$('#pInfo').text("");
-		$('#rLogin').css({'background-color':'white'});
-		// jak niewidoczne jest logowanie to po kliknieciu wysunie sie wlasnie logowanie
-		if($('#formLogin:visible').length == 0){
-			// podczas animacji element #lLogin jest jeszcze niewidoczny, trzeba poczekac 1s
-			setTimeout(function(){ $('#lLogin').focus(); },1000);
-		} 
-		// jak niewidoczna jest rejestracja to po kliknieciu wysunie sie wlasnie rejestracja
-		if($('#formRegister:visible').length == 0){
-			// podczas animacji element #rLogin jest jeszcze niewidoczny, trzeba poczekac 1s
-			setTimeout(function(){ $('#rLogin').focus(); },1000);
-		} 
-		event.preventDefault();
-		$('#formLogin').slideToggle(1000);
-		$('#formRegister').slideToggle(1000);
-	});
-</script>
 <div class="row">
 	<label>Hasło: </label>
 	<input type="password" id="lPassword"></input>
@@ -171,7 +36,7 @@
 </div>
 <div class="row">
 	<label>Kraj: </label>
-	<input type="text" id="rCountry" placeholder="Wpisz swoj kraj"></input>
+	<select name="rCountry"></select>
 </div>
 <div class="row">
 	<label>Telefon: </label>
@@ -186,3 +51,234 @@
 <div class="row" style="color: red; font-weight: bold; font-size: 24px;">
 	<div id="pInfo"></div>
 </div>
+
+<script>
+	// lista krajow z wikipedii
+	var countries = [ 
+		"Afganistan", "Albania", "Algieria", "Andora", "Angola", "Antigua i Barbuda", "Arabia Saudyjska", "Argentyna", "Armenia", "Australia", "Austria", "Azerbejdżan", "Bahamy", "Bahrajn", "Bangladesz", "Barbados", "Belgia", "Belize", "Benin", "Bhutan",
+		"Białoruś", "Boliwia", "Bośnia i Hercegowina", "Botswana", "Brazylia", "Brunei", "Bułgaria", "Burkina Faso", "Burundi",	"Chile", "Chińska Republika Ludowa", "Chorwacja", "Cypr", "Czad", "Czarnogóra", "Czechy", "Dania", "Demokratyczna Republika Konga",
+		"Dominika", "Dominikana", "Dżibuti", "Egipt", "Ekwador", "Erytrea", "Estonia", "Etiopia", "Fidżi", "Filipiny", "Finlandia", "Francja", "Gabon", "Gambia", "Ghana", "Grecja", "Grenada", "Gruzja",
+		"Gujana", "Gwatemala", "Gwinea", "Gwinea Bissau", "Gwinea Równikowa", "Haiti", "Hiszpania", "Holandia", "Honduras", "Indie", "Indonezja", "Irak", "Iran", "Irlandia", "Islandia", "Izrael", "Jamajka", "Japonia",
+		"Jemen", "Jordania", "Kambodża", "Kamerun", "Kanada", "Katar", "Kazachstan", "Kenia", "Kirgistan", "Kiribati", "Kolumbia", "Komory", "Kongo", "Korea Południowa", "Korea Północna", "Kostaryka", "Kuba", "Kuwejt",
+		"Laos", "Lesotho", "Liban", "Liberia", "Libia", "Liechtenstein", "Litwa", "Luksemburg", "Łotwa", "Macedonia", "Madagaskar", "Malawi", "Malediwy", "Malezja", "Mali", "Malta", "Maroko", "Mauretania",
+		"Mauritius", "Meksyk", "Mikronezja", "Mjanma", "Mołdawia", "Monako", "Mongolia", "Mozambik", "Namibia", "Nauru", "Nepal", "Niemcy", "Niger", "Nigeria", "Nikaragua", "Norwegia", "Nowa Zelandia", "Oman",
+		"Pakistan", "Palau", "Panama", "Papua-Nowa Gwinea", "Paragwaj", "Peru", "Polska", "Portugalia", "Południowa Afryka", "Republika Środkowoafrykańska", "Republika Zielonego Przylądka", "Rosja", "Rumunia", "Rwanda", "Saint Kitts i Nevis", "Saint Lucia", "Saint Vincent i Grenadyny", "Salwador",
+		"Samoa", "San Marino", "Senegal", "Serbia", "Seszele", "Sierra Leone", "Singapur", "Słowacja", "Słowenia", "Somalia", "Sri Lanka", "Stany Zjednoczone", "Suazi", "Sudan", "Sudan Południowy", "Surinam", "Syria", "Szwajcaria",
+		"Szwecja", "Tadżykistan", "Tajlandia", "Tanzania", "Timor Wschodni", "Togo", "Tonga", "Trynidad i Tobago", "Tunezja", "Turcja", "Turkmenistan", "Tuvalu", "Uganda", "Ukraina", "Urugwaj", "Uzbekistan", "Vanuatu", "Watykan",
+		"Wenezuela", "Węgry", "Wielka Brytania", "Wietnam", "Włochy", "Wybrzeże Kości Słoniowej", "Wyspy Marshalla", "Wyspy Salomona", "Wyspy Świętego Tomasza i Książęca", "Zambia", "Zimbabwe", "Zjednoczone Emiraty Arabskie"
+	];
+
+	for(var i=0; i<194; i++){
+		if(countries[i] == "Polska") 
+			$('select[name="rCountry"]').append("<option value='"+countries[i]+"' selected>"+countries[i]+"</option>");
+		else 
+			$('select[name="rCountry"]').append("<option value='"+countries[i]+"'>"+countries[i]+"</option>");
+	}
+
+	var moveTo = function(element,href){
+		$(element).click(function(event) {
+			event.preventDefault();
+			$.get(href,function(data){
+				$('#content').html(data);
+			});
+		});
+	}
+
+	$('#lLogin').focus();
+	$("#login").click(function(event){
+		event.preventDefault();
+		var ilogin = $("#lLogin").val();
+		var ipass = $("#lPassword").val();
+		
+		$.post(
+			'/login', 
+			{
+				nick: ilogin,
+				pass: ipass
+			}, 
+			// on success function
+			function(data){
+				if(data.response=='logged'){
+					var begin = '<div>'+
+						'<li><a id="headertest" href="/addmodel">Nowy model</a></li>'+
+						'<li><a id="headerad" href="/ad">Udostępnij</a></li>'+
+						'<li><a id="headerprofile" href="/profile">Profil</a></li>';
+					var adminPart = '<li><a id="headerawaiting" href="/awaiting">Oczekujące</a></li>';
+					var headadminPart = '<li><a id="headerpriviliges" href="/priviliges">Przywileje</a></li>';
+					var end = '</div>';
+					$('#pInfo').text("");
+					$('#headerlogin').text('Wyloguj('+ilogin+')').attr('href','/logout');
+
+					if(data.priviliges=='user') $('#header').prepend(begin+end);
+					else if(data.priviliges=='admin') $('#header').prepend(begin+adminPart+end);
+					else if(data.priviliges=='headadmin') $('#header').prepend(begin+adminPart+headadminPart+end);
+					
+					moveTo('#headerprofile','/profile');
+					moveTo('#headerpriviliges','/priviliges');
+					moveTo('#headerad','/ad');
+					moveTo('#headerawaiting','/awaiting');
+					moveTo('#headertest','/addmodel');
+
+					$.get('/main', function(data) {
+						$("#content").html(data);
+					});
+				} else if ( data.response=='wrong pass'){
+					$('#pInfo').text("Niepoprawne dane");
+				}
+			}
+		);
+		
+	});
+	var result;
+	$('#rPassword').bind('keydown keyup focusout',function(){
+		if($(this).val()==''){
+			$('#passwordStrength').remove();
+		} else {
+			var bar = $(this).parent().find('#passwordStrength');
+			if(bar.length == 0){
+				// STRENGTH BAR
+				$(this).parent().prepend('<div id="passwordStrength"><div id="barStrength"></div></div>');
+				$('#passwordStrength').css({position: "relative", margin: "0 auto", width: "80%", height: "20px", "background-color": "grey", "text-align": "center", "border-radius" : "5px"});
+				$('#barStrength').css({position: "absolute", width: "0%", height: "100%", "background-color": "green", "font-weight": "bold", color: "white","border-radius" : "5px"});
+			}
+
+			if($(this).val()!== null){
+				var numbers = $(this).val().match(/[0-9]/g);
+				if(numbers === null ) numbers = 0;
+				else numbers = $(this).val().match(/[0-9]/g).length;
+
+				var letters = $(this).val().match(/[a-z]/g);
+				if(letters === null ) letters = 0;
+				else letters = $(this).val().match(/[a-z]/g).length;
+
+				var capitals = $(this).val().match(/[A-Z]/g);
+				if(capitals === null ) capitals = 0;
+				else capitals = $(this).val().match(/[A-Z]/g).length;
+				var len = $(this).val().length;
+				if(numbers>2) numbers=2;
+				if(letters>2) letters=2;
+				if(capitals>2) capitals=2;
+				if(len>8) len=8;
+				result = ((numbers+letters+capitals+len/4)/8)*100;
+				// ustawienie koloru i wartosci strength bar
+				if(result >= 50 && result <= 80)
+					setBar(result,"orange","niezłe");
+				else if ( result < 30 )
+					setBar(result,"red","słabe");
+				else if ( result >= 30 && result < 50)
+					setBar(result,"red","średnie");
+				else if ( result > 80 && result < 90)
+					setBar(result,"lightgreen","dobre");
+				else if ( result >= 90)
+					setBar(result,"green","świetne!");
+				
+				if(result === 0)
+					document.getElementById('barStrength').innerHTML = "";
+			}
+
+		}
+	});
+
+	var setBar = function(strength,color,text){
+		$('#barStrength').css({width: ""+strength+"%", "background-color" : color});
+		document.getElementById('barStrength').innerHTML = text;
+	}
+
+	var checkInput = function(element,pattern,errorText){
+		var regex = new RegExp(pattern);
+		if(regex.test($(element).val())){
+			$('#pInfo').text("");
+			$(element).css({'background-color':'rgb(255,255,255)'});
+			return true;
+		} else {
+			$('#pInfo').text(errorText);
+			$(element).css({'background-color':'rgb(255,135,132)'});
+			return false;
+		}
+	}
+
+	$('#rLogin').on('focusout',function(){
+		checkInput('#rLogin','^[0-9a-z]{3,16}$',"W nazwie powinny być tylko litery i cyfry.");
+	});
+
+	$('#rName').on('focusout',function(){
+		checkInput('#rName','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[ ][A-Z][a-z]{2,}$)','Niepoprawnie wpisane imie.');
+	});
+
+	$('#rSurname').on('focusout',function(){
+		checkInput('#rSurname','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[-][A-Z][a-z]{2,}$)','Niepoprawnie wpisane nazwisko.');
+	});
+
+	$('#rPhone').on('focusout',function(){
+		checkInput('#rPhone','^[0-9]{9}$','Numer telefonu powinien zawierać 9 cyfr.');
+	});
+
+	$('#rEmail').on('focusout',function(){
+		checkInput('#rEmail','^[a-z0-9_\-]+@[a-z0-9]{2,}\.[a-z]{2,3}$','Niepoprawny adres e-mail.');
+	});
+
+	$('#register').click(function(event){
+		event.preventDefault();
+		var info = $('#info');
+		var rlogin = $('#rLogin').val();
+		var rpass = $('#rPassword').val();
+		var rpass2 = $('#rPassword2').val();
+		var rname = $('#rName').val();
+		var rsurname = $('#rSurname').val();
+		var rcountry = $('select[name="rCountry"]').val();
+		var rphone = $('#rPhone').val();
+		var remail = $('#rEmail').val();
+		
+		if(!checkInput('#rLogin','^[0-9a-z]{3,16}$',"W nazwie powinny być tylko litery i cyfry."))	return false;
+		if(!checkInput('#rName','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[ ][A-Z][a-z]{2,}$)','Niepoprawnie wpisane imie.')) return false;
+		if(!checkInput('#rSurname','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[-][A-Z][a-z]{2,}$)','Niepoprawnie wpisane nazwisko.')) return false;
+		if(!checkInput('#rPhone','^[0-9]{9}$','Numer telefonu powinien zawierać 9 cyfr.')) return false;
+		if(!checkInput('#rEmail','^[a-z0-9_\-]+@[a-z0-9]{2,}\.[a-z]{2,3}$','Niepoprawny adres e-mail.')) return false;
+
+		if(rpass==rpass2){
+			info.text('');
+			$.post(
+				'/register', 
+				{
+					nick: rlogin, pass: rpass, name: rname,
+					surname: rsurname, country: rcountry, 
+					phone: rphone, email: remail
+				}, 
+				function(data){
+					if(data=="registered"){
+						$('#pInfo').text("");
+						$("#lLogin").val(rlogin);
+						$("#lPassword").val(rpass);
+						$('#toggleButton').click();
+						$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('');
+						$('#passwordStrength').remove();
+					} else if (data="occupied"){
+						$('#pInfo').text("Ten nick jest zajęty!");
+						$('#rLogin').css({'background-color':'rgb(255,135,132)'});
+					}
+				}
+			);
+		} else {
+			$('#pInfo').text("Wpisane hasła różnią się od siebie.");
+			$('#rPassword2').css({'background-color':'rgb(255,135,132)'});
+		}
+	});
+
+	$('#toggleButton').click(function(event){
+		$('#pInfo').text("");
+		$('#rLogin').css({'background-color':'white'});
+		// jak niewidoczne jest logowanie to po kliknieciu wysunie sie wlasnie logowanie
+		if($('#formLogin:visible').length == 0){
+			// podczas animacji element #lLogin jest jeszcze niewidoczny, trzeba poczekac 1s
+			setTimeout(function(){ $('#lLogin').focus(); },1000);
+		} 
+		// jak niewidoczna jest rejestracja to po kliknieciu wysunie sie wlasnie rejestracja
+		if($('#formRegister:visible').length == 0){
+			// podczas animacji element #rLogin jest jeszcze niewidoczny, trzeba poczekac 1s
+			setTimeout(function(){ $('#rLogin').focus(); },1000);
+		} 
+		event.preventDefault();
+		$('#formLogin').slideToggle(1000);
+		$('#formRegister').slideToggle(1000);
+	});
+</script>
