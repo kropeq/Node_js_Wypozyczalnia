@@ -6,9 +6,9 @@ loadContent = function(href){
 }
 
 $(document).ready(function(){
-	$("#header li").find('a').click(function(event){
+	$("#header div li").click(function(event){
 		event.preventDefault(); // zabrania wykonania domyślnej akcji przycisku
-		var href = $(this).attr('href');
+		var href = $(this).find('a').attr('href');
 		loadContent(href);
 	});
 	$("#headerlogin").click(function(event){

@@ -14,23 +14,27 @@
 </div>
 <div id="formRegister" style="display: none">
 <div class="row">
+	<div id="rInfo" style="opacity: 0"></div>
 	<label>Login: </label>
 	<input type="text" id="rLogin" placeholder="Wpisz pseudonim"></input>
 </div>
 <div class="row">
+	<div id="rInfo" style="opacity: 0"></div>
 	<label>Hasło: </label>
 	<input type="password" id="rPassword"></input>
 </div>
-<div id="info" style="color: red; display: block"></div>
 <div class="row">
+	<div id="rInfo" style="opacity: 0"></div>
 	<label>Powtórz: </label>
 	<input type="password" id="rPassword2"></input>
 </div>
 <div class="row">
+	<div id="rInfo" style="opacity: 0"></div>
 	<label>Imie: </label>
 	<input type="text" id="rName" placeholder="Wpisz swoje imie"></input>
 </div>
 <div class="row">
+	<div id="rInfo" style="opacity: 0"></div>
 	<label>Nazwisko: </label>
 	<input type="text" id="rSurname" placeholder="Wpisz swoje nazwisko"></input>
 </div>
@@ -39,10 +43,12 @@
 	<select name="rCountry"></select>
 </div>
 <div class="row">
+	<div id="rInfo" style="opacity: 0"></div>
 	<label>Telefon: </label>
 	<input type="text" id="rPhone" placeholder="Wpisz nr telefonu"></input>
 </div>
 <div class="row">
+	<div id="rInfo" style="opacity: 0"></div>
 	<label>E-mail: </label>
 	<input type="text" id="rEmail" placeholder="Wpisz adres e-mail"></input>
 </div>
@@ -53,7 +59,7 @@
 </div>
 
 <script>
-	// lista krajow z wikipedii
+	// ------------------------- SELECT : KRAJE ---------------------------------
 	var countries = [ 
 		"Afganistan", "Albania", "Algieria", "Andora", "Angola", "Antigua i Barbuda", "Arabia Saudyjska", "Argentyna", "Armenia", "Australia", "Austria", "Azerbejdżan", "Bahamy", "Bahrajn", "Bangladesz", "Barbados", "Belgia", "Belize", "Benin", "Bhutan",
 		"Białoruś", "Boliwia", "Bośnia i Hercegowina", "Botswana", "Brazylia", "Brunei", "Bułgaria", "Burkina Faso", "Burundi",	"Chile", "Chińska Republika Ludowa", "Chorwacja", "Cypr", "Czad", "Czarnogóra", "Czechy", "Dania", "Demokratyczna Republika Konga",
@@ -74,7 +80,7 @@
 		else 
 			$('select[name="rCountry"]').append("<option value='"+countries[i]+"'>"+countries[i]+"</option>");
 	}
-
+	// -------------------------- PRZEKIEROWANIE ---------------------------------
 	var moveTo = function(element,href){
 		$(element).click(function(event) {
 			event.preventDefault();
@@ -83,7 +89,7 @@
 			});
 		});
 	}
-
+	// ----------------------------- LOGOWANIE ------------------------------------
 	$('#lLogin').focus();
 	$("#login").click(function(event){
 		event.preventDefault();
@@ -129,6 +135,7 @@
 		);
 		
 	});
+	// ------------------- PASEK SIŁY HASŁA ----------------------------
 	var result;
 	$('#rPassword').bind('keydown keyup focusout',function(){
 		if($(this).val()==''){
@@ -141,7 +148,6 @@
 				$('#passwordStrength').css({position: "relative", margin: "0 auto", width: "80%", height: "20px", "background-color": "grey", "text-align": "center", "border-radius" : "5px"});
 				$('#barStrength').css({position: "absolute", width: "0%", height: "100%", "background-color": "green", "font-weight": "bold", color: "white","border-radius" : "5px"});
 			}
-
 			if($(this).val()!== null){
 				var numbers = $(this).val().match(/[0-9]/g);
 				if(numbers === null ) numbers = 0;
@@ -184,65 +190,130 @@
 		document.getElementById('barStrength').innerHTML = text;
 	}
 
+	// ------------------- VALIDACJA PÓL  --------------------------
 	var checkInput = function(element,pattern,errorText){
 		var regex = new RegExp(pattern);
 		if(regex.test($(element).val())){
-			$('#pInfo').text("");
-			$(element).css({'background-color':'rgb(255,255,255)'});
+			if($(element).hasClass('warning'))
+				$(element).removeClass('warning');
 			return true;
 		} else {
-			$('#pInfo').text(errorText);
-			$(element).css({'background-color':'rgb(255,135,132)'});
+			$(element).addClass('warning');
+			//$(element).css({'background-color':'rgb(255,135,132)'});
 			return false;
 		}
 	}
 
-	$('#rLogin').on('focusout',function(){
-		checkInput('#rLogin','^[0-9a-z]{3,16}$',"W nazwie powinny być tylko litery i cyfry.");
+	var checkFocusout = function(element,pattern,errorText){
+		$(element).on('focusout',function(){
+			checkInput(element,pattern,errorText);
+		});
+	}
+
+	var checkPassword = function(element){
+		// zrobienie regex bez regexu
+		var numbers = $(element).val().match(/[0-9]/g);
+		if(numbers === null ) numbers = 0;
+		else numbers = $(element).val().match(/[0-9]/g).length;
+		
+		var letters = $(element).val().match(/[a-z]/g);
+		if(letters === null ) letters = 0;
+		else letters = $(element).val().match(/[a-z]/g).length;
+		
+		var capitals = $(element).val().match(/[A-Z]/g);
+		if(capitals === null ) capitals = 0;
+		else capitals = $(element).val().match(/[A-Z]/g).length;
+		var len = $(element).val().length;
+		if(numbers>2) numbers=2;
+		if(letters>2) letters=2;
+		if(capitals>2) capitals=2;
+		if(len>10) len=10;
+		var result = ((numbers+letters+capitals+len/5)/8)*100;
+		if(result>=75){
+			if($(element).hasClass("warning")) $(element).removeClass("warning");
+		} else {
+			if(!$(element).hasClass("warning"))	$(element).addClass("warning");
+		}
+	}
+
+	$('#rPassword').on('focusout',function () {
+		checkPassword("#rPassword");
 	});
 
-	$('#rName').on('focusout',function(){
-		checkInput('#rName','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[ ][A-Z][a-z]{2,}$)','Niepoprawnie wpisane imie.');
-	});
+	// -------------- Informacje o błędzie -----------------
 
-	$('#rSurname').on('focusout',function(){
-		checkInput('#rSurname','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[-][A-Z][a-z]{2,}$)','Niepoprawnie wpisane nazwisko.');
-	});
+	var infos = function(element,errorText){
+		$(element).on('mouseover',function(){
+			if($(this).hasClass('warning')){
+				var pos = $(this).position();
+				// przerwanie poprzednich animacji - czyści kolejke animacji
+				$(element).parent().find('#rInfo').stop(true,true);
+				$(element).parent().find('#rInfo').css({
+					"position": "absolute",
+					"width": "200px",
+					"top": pos.top + 12,
+					"left": pos.left + $(this).width() + 8,
+					"color": "blue",
+					"font-weight": "bold",
+					'background-color' : 'white',
+					'border-radius' : '5px',
+					'text-align' : 'center'
+				}).animate({opacity: 1},200);
+				$(element).parent().find('#rInfo').text(errorText);
+			}
+		});
+		$(element).on('mouseout',function(){
+			var pos = $(this).position();
+			$(element).parent().find('#rInfo').animate({opacity: 0},400);
+		});
+	}
 
-	$('#rPhone').on('focusout',function(){
-		checkInput('#rPhone','^[0-9]{9}$','Numer telefonu powinien zawierać 9 cyfr.');
-	});
+	infos('#rLogin',"Niepoprawny login");
+	infos('#rName','Niepoprawne imie');
+	infos('#rSurname','Niepoprawne nazwisko');
+	infos('#rPhone','Niepoprawny telefon');
+	infos('#rEmail','Niepoprawny email');
+	infos('#rPassword','Niepoprawne hasło');
 
-	$('#rEmail').on('focusout',function(){
-		checkInput('#rEmail','^[a-z0-9_\-]+@[a-z0-9]{2,}\.[a-z]{2,3}$','Niepoprawny adres e-mail.');
-	});
 
+
+
+
+	checkFocusout('#rLogin','^[0-9a-z]{3,16}$',"W nazwie powinny być tylko litery i cyfry.");
+	checkFocusout('#rName','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[ ][A-Z][a-z]{2,}$)','Niepoprawnie wpisane imie.');
+	checkFocusout('#rSurname','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[-][A-Z][a-z]{2,}$)','Niepoprawnie wpisane nazwisko.');
+	checkFocusout('#rPhone','^[0-9]{9}$','Numer telefonu powinien zawierać 9 cyfr.');
+	checkFocusout('#rEmail','^[a-z0-9_\-]+@[a-z0-9]{2,}\.[a-z]{2,3}$','Niepoprawny adres e-mail.');
+
+
+	// ------------------- REJESTRACJA  --------------------------
 	$('#register').click(function(event){
 		event.preventDefault();
-		var info = $('#info');
 		var rlogin = $('#rLogin').val();
 		var rpass = $('#rPassword').val();
 		var rpass2 = $('#rPassword2').val();
-		var rname = $('#rName').val();
-		var rsurname = $('#rSurname').val();
-		var rcountry = $('select[name="rCountry"]').val();
-		var rphone = $('#rPhone').val();
-		var remail = $('#rEmail').val();
 		
 		if(!checkInput('#rLogin','^[0-9a-z]{3,16}$',"W nazwie powinny być tylko litery i cyfry."))	return false;
 		if(!checkInput('#rName','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[ ][A-Z][a-z]{2,}$)','Niepoprawnie wpisane imie.')) return false;
 		if(!checkInput('#rSurname','(^[A-Z][a-z]{2,}$)|(^[A-Z][a-z]{2,}[-][A-Z][a-z]{2,}$)','Niepoprawnie wpisane nazwisko.')) return false;
 		if(!checkInput('#rPhone','^[0-9]{9}$','Numer telefonu powinien zawierać 9 cyfr.')) return false;
 		if(!checkInput('#rEmail','^[a-z0-9_\-]+@[a-z0-9]{2,}\.[a-z]{2,3}$','Niepoprawny adres e-mail.')) return false;
+		checkPassword("#rPassword");
+		if($("#rPassword").hasClass('warning')){
+			return false;
+		}
 
 		if(rpass==rpass2){
-			info.text('');
 			$.post(
 				'/register', 
 				{
-					nick: rlogin, pass: rpass, name: rname,
-					surname: rsurname, country: rcountry, 
-					phone: rphone, email: remail
+					nick: rlogin,
+					pass: rpass, 
+					name: $('#rName').val(),
+					surname: $('#rSurname').val(),
+					country: $('select[name="rCountry"]').val(), 
+					phone: $('#rPhone').val(),
+					email: $('#rEmail').val()
 				}, 
 				function(data){
 					if(data=="registered"){
@@ -250,7 +321,7 @@
 						$("#lLogin").val(rlogin);
 						$("#lPassword").val(rpass);
 						$('#toggleButton').click();
-						$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('');
+						$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('').removeClass('warning');
 						$('#passwordStrength').remove();
 					} else if (data="occupied"){
 						$('#pInfo').text("Ten nick jest zajęty!");
@@ -259,10 +330,11 @@
 				}
 			);
 		} else {
-			$('#pInfo').text("Wpisane hasła różnią się od siebie.");
-			$('#rPassword2').css({'background-color':'rgb(255,135,132)'});
+			$('#rPassword2').addClass('warning');
 		}
 	});
+
+	// -------------- SLIDE Rejestracji  --------------------
 
 	$('#toggleButton').click(function(event){
 		$('#pInfo').text("");
@@ -270,6 +342,7 @@
 		// jak niewidoczne jest logowanie to po kliknieciu wysunie sie wlasnie logowanie
 		if($('#formLogin:visible').length == 0){
 			// podczas animacji element #lLogin jest jeszcze niewidoczny, trzeba poczekac 1s
+			$('#rLogin, #rPassword, #rPassword2, #rName, #rSurname, #rCountry, #rPhone, #rEmail').val('').removeClass('warning');
 			setTimeout(function(){ $('#lLogin').focus(); },1000);
 		} 
 		// jak niewidoczna jest rejestracja to po kliknieciu wysunie sie wlasnie rejestracja
